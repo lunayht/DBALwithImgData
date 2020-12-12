@@ -28,18 +28,14 @@ For Windows and MacOS, please refer to https://www.python.org/getit/.
 
 ### Installation
 Use ```pip3 install -r requirements.txt``` to install:
-- pipenv (for testing)
+- pytest (for testing)
 - pytorch
 - numpy
 
 ### Pytest Test Suite
-1. Install pytest:
+1. To run test:
 ```bash
-$ pipenv install --dev pytest
-```
-2. To run test:
-```bash
-$ pipenv run pytest
+$ pytest
 ```
 
 ### Launch
