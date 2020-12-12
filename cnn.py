@@ -8,7 +8,10 @@ class CNN(nn.Module):
         """
         num_filters: Number of filters, out channel for 1st and 2nd conv layers,
         kernel_size: Kernel size of convolution,
-        dense_layer: Dense layer units
+        dense_layer: Dense layer units,
+        img_rows: Height of input image,
+        img_cols: Width of input image,
+        maxpool: Max pooling size
         """
         super(CNN, self).__init__()
         self.conv1 = nn.Conv2d(1, num_filters, kernel_size, 1)
