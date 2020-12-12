@@ -10,7 +10,7 @@ Compare various acquisition functions: Bayesian Active Learning by Disagreement 
 
 > Convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-logsoftmax
 
-> With **32** convolution kernels, **4x4** kernel size, **2x2** pooling, dense layer with **128** unites and dropout probabilities **0.25** and **0.5**. 
+> With **32** convolution kernels, **4x4** kernel size, **2x2** pooling, dense layer with **128** units and dropout probabilities **0.25** and **0.5**. 
 
 All models are trained on MNIST dataset with random initial training set of 20 datapoints and a validation set of 100 points on optimised weight decay. A standard test set of 10K is used and the rest of the points are used as pool set. The test error of each model and each acquisition function is assessed after each acquisition using dropout approximation at test time. 
 
