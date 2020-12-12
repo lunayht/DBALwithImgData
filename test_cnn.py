@@ -17,14 +17,14 @@ class TestCNN:
     #     assert net(torch.randn(1, 1, 28, 28)).size() == (1, 3872), \
     #         "expect output size of (1, 3872)"
     def test_output_size_28x28(self):
-        net = CNN()
+        net = ConvNN()
         assert net(torch.randn(1, 1, 28, 28)).size() == (
             1,
             10,
         ), "expect output size of (1,10)"
 
     def test_output_size_32x32(self):
-        net = CNN(img_rows=32, img_cols=32)
+        net = ConvNN(img_rows=32, img_cols=32)
         assert net(torch.randn(1, 1, 32, 32)).size() == (
             1,
             10,

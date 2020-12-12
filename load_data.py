@@ -19,7 +19,7 @@ class LoadData:
             return False
         return True
 
-    def download_dataset(self) -> tuple:
+    def download_dataset(self):
         """Load MNIST dataset for training and test set."""
         transform = transforms.Compose(
             [transforms.ToTensor(), transforms.Normalize(0.5, 0.5)]
@@ -34,7 +34,7 @@ class LoadData:
         train_size: int = 10000,
         val_size: int = 5000,
         pool_size: int = 45000,
-    ) -> tuple:
+    ):
         """Split all training datatset into train, validate, pool sets and load them accordingly.
 
         Attributes:

@@ -26,7 +26,7 @@ class ConvNN(nn.Module):
             img_cols: Width of input image,
             maxpool: Max pooling size
         """
-        super(CNN, self).__init__()
+        super(ConvNN, self).__init__()
         self.conv1 = nn.Conv2d(1, num_filters, kernel_size, 1)
         self.conv2 = nn.Conv2d(num_filters, num_filters, kernel_size, 1)
         self.dropout1 = nn.Dropout(0.25)
