@@ -31,6 +31,7 @@ Use ```pip3 install -r requirements.txt``` to install:
 - pytest (for testing)
 - pytorch
 - numpy
+- matplotlib
 
 ### Pytest Test Suite
 1. To run test:
