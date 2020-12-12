@@ -1,4 +1,5 @@
 pytest>=6.1.2
 numpy>=1.18.5
 torch>=1.7.0
-torchvision>=1.7.0
+torchvision>=0.8.1
+matplotlib>=3.2.2
