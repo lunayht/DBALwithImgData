@@ -8,7 +8,7 @@ By taking advantage of specialised models such as Bayesian convolutional neural 
 ### Methodology
 Compare various acquisition functions: Bayesian Active Learning by Disagreement (BALD, _[Houlsby et al., 2011](https://arxiv.org/pdf/1112.5745.pdf)_),Variation Ratios (_[Freeman, 1965](https://academic.oup.com/sf/article-abstract/44/3/455/2228590?redirectedFrom=fulltext)_), Max Entropy (_[Shannon, 1948](http://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)_) and baseline Random relying on Bayesian CNN uncertainty with simple image classification benchmark. All acquisition functions are assessed with _same_ model structure:
 
-> Convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax
+> Convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-logsoftmax
 
 > With **32** convolution kernels, **4x4** kernel size, **2x2** pooling, dense layer with **128** unites and dropout probabilities **0.25** and **0.5**. 
 
