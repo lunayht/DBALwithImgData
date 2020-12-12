@@ -29,6 +29,8 @@ For Windows and MacOS, please refer to https://www.python.org/getit/.
 ### Installation
 Use ```pip3 install -r requirements.txt``` to install:
 - pytest (for testing)
+- modAL (modular active learning framework for Pytorch)
+- skorch (a scikit-learn wrapper for Pytorch)
 - pytorch
 - numpy
 - matplotlib
@@ -47,3 +49,5 @@ $ python3 main.py
 
 ## Acknowledgements
 1. https://github.com/Riashat/Deep-Bayesian-Active-Learning
+2. https://github.com/damienlancry/DBAL 
+3. https://github.com/modAL-python/modAL/blob/master/examples/pytorch_integration.py

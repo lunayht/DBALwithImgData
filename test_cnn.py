@@ -1,6 +1,6 @@
 import torch
 
-from cnn import CNN
+from cnn_model import ConvNN
 
 
 class TestCNN:
