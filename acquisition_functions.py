@@ -14,16 +14,16 @@ def uniform(X_pool: torch.Tensor, n_query: int = 10):
     query_idx = np.random.choice(range(len(X_pool)), size=n_query, replace=False)
     return query_idx, X_pool[query_idx]
 
-def max_entropy(X_pool: torch.Tensor, n_query: int = 10, T: int = 10):
+def max_entropy(model, X_pool: torch.Tensor, n_query: int = 10, T: int = 10):
     """Choose pool points that maximise the predictive entropy. Given
     H[y|x,D_train] := - sum_{c} p(y=c|x,D_train)log p(y=c|x,D_train)
     
     Attributes:
+        model: Model that is ready to measure uncertainty after training,
         X_pool: Pool set to select uncertainty,
         n_query: Number of points that maximise a(x) from pool set,
         T: Number of MC dropout iterations aka training iterations
     """
-    p_c = 
     pass
 
 def bald():
