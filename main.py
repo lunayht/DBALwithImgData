@@ -65,6 +65,7 @@ def train_active_learning(args, device, datasets: dict) -> dict:
             test_scores.append(test_score)
         avg_hist = np.average(np.array(avg_hist), axis=0)
         avg_test = np.average(np.array(test_scores), axis=0)
+        print(f"Average Test score for {acq_func_name}: {avg_test}")
         results[acq_func_name] = avg_hist
         results["testscore"][i] = avg_test
     print("--------------- Done Training! ---------------")
