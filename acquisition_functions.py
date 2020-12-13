@@ -2,7 +2,7 @@ import numpy as np
 import torch
 
 
-def uniform(X_pool: torch.Tensor, n_query: int = 10):
+def uniform(model, X_pool: torch.Tensor, n_query: int = 10):
     """Baseline acquisition a(x) = unif() with unif() a function
     returning a draw from a uniform distribution over the interval [0,1].
     Using this acquisition function is equivalent to choosing a point
