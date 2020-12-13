@@ -145,9 +145,7 @@ def main():
     ) = DataLoader.load_all()
 
     results = train_active_learning(args, device, datasets)
-    print(f"Average test score for each acquisition function are:")
-    for i, score in results["testscore"]:
-        print(f"{i+1}. {score:0.4f}")
+    print(f"Average test score for each acquisition function are: {results["testscore"]}")
 
 if __name__ == "__main__":
     main()
