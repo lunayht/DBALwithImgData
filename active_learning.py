@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from modAL.models import ActiveLearner
 
-from acquisition_functions import uniform, max_entropy, bald
+from acquisition_functions import uniform, max_entropy, bald, var_ratios
 
 
 def tensor_to_np(tensor_data: torch.Tensor) -> np.ndarray:
