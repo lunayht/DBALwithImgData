@@ -9,7 +9,8 @@ from cnn_model import ConvNN
 from active_learning import select_acq_function, active_learning_procedure
 
 def load_CNN_model(args, device):
-    """Load new model each time for different acqusition function"""
+    """Load new model each time for different acqusition function 
+    each experiments"""
     model = ConvNN().to(device)
     cnn_classifier = NeuralNetClassifier(
         module=model,
@@ -40,9 +41,9 @@ def train_active_learning(args, device, datasets: dict) -> dict:
         avg_hist = []
         test_scores = []
         acq_func_name = str(acq_func).split(" ")[1]
-        estimator = load_CNN_model(args, device)
         print(f"\n---------- Start {acq_func_name} training! ----------")
         for e in range(args.experiments):
+            estimator = load_CNN_model(args, device)
             print(
                 f"********** Experiment Iterations: {e+1}/{args.experiments} **********"
             )
@@ -145,7 +146,6 @@ def main():
     ) = DataLoader.load_all()
 
     results = train_active_learning(args, device, datasets)
-    print(f"Average test score for each acquisition function are: {results["testscore"]}")
 
 if __name__ == "__main__":
     main()

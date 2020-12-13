@@ -55,7 +55,8 @@ def active_learning_procedure(
         X_pool = np.delete(X_pool, query_idx, axis=0)
         y_pool = np.delete(y_pool, query_idx, axis=0)
         model_accuracy_val = learner.score(X_val, y_val)
-        print(f"Val Accuracy after query {index+1}: {model_accuracy_val:0.4f}")
+        if index+1%10 == 0:
+            print(f"Val Accuracy after query {index+1}: {model_accuracy_val:0.4f}")
         perf_hist.append(model_accuracy_val)
     model_accuracy_test = learner.score(X_test, y_test)
     print(f"********** Test Accuracy per experiment: {model_accuracy_test} **********")
