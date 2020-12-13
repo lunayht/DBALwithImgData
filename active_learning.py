@@ -18,7 +18,7 @@ def active_learning_procedure(
     estimator,
     T: int = 100,
     n_query: int = 10,
-) -> list:
+):
     """Active Learning Procedure
 
     Attributes:
