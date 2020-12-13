@@ -6,19 +6,34 @@ from skorch import NeuralNetClassifier
 
 from load_data import LoadData
 from cnn_model import ConvNN
+from active_learning import select_acq_function, active_learning_procedure
 
-def tensor_to_np(tensor_data: torch.Tensor) -> np.ndarray:
-    """Since Skorch doesn not support dtype of torch.Tensor, we will modify 
-    the dtype to numpy.ndarray
+def train(args, estimator, device, datasets: dict):
+    """Start training process
     
-    Attribute:
-        tensor_data: Data of class type=torch.Tensor
+    Attributes:
+        args: Argparse input,
+        estimator: Loaded model, e.g. CNN classifier,
+        device: Cpu or gpu,
+        datasets: Dataset dict that consists of all datasets,
     """
-    np_data = tensor_data.detach().numpy()
-    return np_data
-
-def train(args, model, device, train_loader, optimizer, epoch):
-    pass
+    acq_functions = select_acq_function(args.acq_func)
+    results = dict()
+    for acq_func in acq_functions:
+        avg_hist = []
+        acq_func_name = str(acq_func).split(" ")[1]
+        print(f"\n---------- Start {acq_func_name} training! ----------")
+        for e in range(args.experiments):
+            print(f"*** Experiment Iterations: {e+1}/{args.experiments} ***")
+            training_hist = active_learning_procedure(
+                acq_func, datasets["X_test"], datasets["y_test"], \
+                datasets["X_pool"], datasets["y_pool"], datasets["X_init"], \
+                datasets["y_init"], estimator, args.dropout_iter, args.query)
+            avg_hist.append(training_hist)
+        avg_hist = np.average(np.array(avg_hist), axis=0)
+        results[acq_func_name] = avg_hist
+    print("Done Training!")
+    return results
 
 def main():
     parser = argparse.ArgumentParser()
@@ -32,20 +47,25 @@ def main():
                         help="random seed (default: 369)")
     parser.add_argument("--experiments", type=int, default=3, metavar="E",
                         help="number of experiments (default: 3)")
-    parser.add_argument("--acq_iter", type=int, default=98, metavar="AI",
-                        help="acquisition iterations (default: 98)")
-    parser.add_argument("--dropout_iter", type=int, default=100, metavar="DI",
-                        help="dropout iterations (default: 100)")
+    parser.add_argument("--dropout_iter", type=int, default=100, metavar="T",
+                        help="dropout iterations,T (default: 100)")
     parser.add_argument("--query", type=int, default=10, metavar="Q",
                         help="number of query (default: 10)")
+    parser.add_argument("--acq_func", type=int, default=0, metavar="AF",
+                        help="acqusition functions: 0-all, 1-uniform, 2-max_entropy, \
+                            3-bald (default: 0)")
+    
     args = parser.parse_args()
     torch.manual_seed(args.seed)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
     
+    datasets = dict()
     DataLoader = LoadData()
-    X_init, y_init, X_train_All, y_train_All, X_val, y_val, X_pool, y_pool, \
-        X_test, y_test = DataLoader.load_all()
+    datasets["X_init"], datasets["y_init"], datasets["X_train_All"], \
+        datasets["y_train_All"], datasets["X_val"], datasets["y_val"], \
+        datasets["X_pool"], datasets["y_pool"], datasets["X_test"], \
+        datasets["y_test"] = DataLoader.load_all()
     
     model = ConvNN().to(device)
     cnn_classifier = NeuralNetClassifier(
@@ -55,7 +75,12 @@ def main():
                      max_epochs=args.epochs,
                      criterion=nn.CrossEntropyLoss,
                      optimizer=torch.optim.Adam,
+                     train_split=None,
+                     verbose=0,
                      device=device)
+    
+    results = train(args, cnn_classifier, device, datasets)
+
 
 if __name__ == "__main__":
     main()

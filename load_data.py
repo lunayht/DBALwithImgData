@@ -5,6 +5,8 @@ import torchvision.transforms as transforms
 from torchvision.datasets import MNIST
 from torch.utils.data import DataLoader, random_split
 
+from active_learning import tensor_to_np
+
 class LoadData:
     """Download, split and shuffle dataset into train, validate, test and pool"""
     def __init__(self):
@@ -74,5 +76,8 @@ class LoadData:
 
     def load_all(self):
         """Load all data"""
-        return self.X_init, self.y_init, self.X_train_All, self.y_train_All, self.X_val, \
-            self.y_val, self.X_pool, self.y_pool, self.X_test, self.y_test 
+        return tensor_to_np(self.X_init), tensor_to_np(self.y_init), \
+            tensor_to_np(self.X_train_All), tensor_to_np(self.y_train_All), \
+            tensor_to_np(self.X_val), tensor_to_np(self.y_val), \
+            tensor_to_np(self.X_pool), tensor_to_np(self.y_pool), \
+            tensor_to_np(self.X_test), tensor_to_np(self.y_test) 
