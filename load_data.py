@@ -5,8 +5,6 @@ import torchvision.transforms as transforms
 from torchvision.datasets import MNIST
 from torch.utils.data import DataLoader, random_split
 
-from active_learning import tensor_to_np
-
 
 class LoadData:
     """Download, split and shuffle dataset into train, validate, test and pool"""
@@ -24,6 +22,17 @@ class LoadData:
             self.y_test,
         ) = self.split_and_load_dataset()
         self.X_init, self.y_init = self.preprocess_training_data()
+
+    def tensor_to_np(self, tensor_data: torch.Tensor) -> np.ndarray:
+        """Since Skorch doesn not support dtype of torch.Tensor, we will modify
+        the dtype to numpy.ndarray
+
+        Attribute:
+            tensor_data: Data of class type=torch.Tensor
+        """
+        np_data = tensor_data.detach().numpy()
+        return np_data
+
 
     def check_MNIST_folder(self) -> bool:
         """Check whether MNIST folder exists, if yes remove and redownload."""
@@ -95,12 +104,12 @@ class LoadData:
     def load_all(self):
         """Load all data"""
         return (
-            tensor_to_np(self.X_init),
-            tensor_to_np(self.y_init),
-            tensor_to_np(self.X_val),
-            tensor_to_np(self.y_val),
-            tensor_to_np(self.X_pool),
-            tensor_to_np(self.y_pool),
-            tensor_to_np(self.X_test),
-            tensor_to_np(self.y_test),
+            self.tensor_to_np(self.X_init),
+            self.tensor_to_np(self.y_init),
+            self.tensor_to_np(self.X_val),
+            self.tensor_to_np(self.y_val),
+            self.tensor_to_np(self.X_pool),
+            self.tensor_to_np(self.y_pool),
+            self.tensor_to_np(self.X_test),
+            self.tensor_to_np(self.y_test),
         )

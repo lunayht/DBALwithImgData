@@ -5,17 +5,6 @@ from modAL.models import ActiveLearner
 from acquisition_functions import uniform, max_entropy, bald, var_ratios
 
 
-def tensor_to_np(tensor_data: torch.Tensor) -> np.ndarray:
-    """Since Skorch doesn not support dtype of torch.Tensor, we will modify
-    the dtype to numpy.ndarray
-
-    Attribute:
-        tensor_data: Data of class type=torch.Tensor
-    """
-    np_data = tensor_data.detach().numpy()
-    return np_data
-
-
 def active_learning_procedure(
     query_strategy,
     X_val: np.ndarray,
