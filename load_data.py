@@ -33,7 +33,6 @@ class LoadData:
         np_data = tensor_data.detach().numpy()
         return np_data
 
-
     def check_MNIST_folder(self) -> bool:
         """Check whether MNIST folder exists, if yes remove and redownload."""
         if os.path.isfile("MNIST/"):
