@@ -10,7 +10,7 @@ def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100):
         X_pool: Pool set to select uncertainty,
         T: Number of MC dropout iterations aka training iterations,
     """
-    random_subset = np.random.choice(range(len(X_pool)), size=2000, replace=False)
+    random_subset = np.random.choice(range(len(X_pool)), size=1000, replace=False)
     with torch.no_grad():
         outputs = np.stack(
             [

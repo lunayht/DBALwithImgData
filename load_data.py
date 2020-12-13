@@ -9,7 +9,10 @@ from torch.utils.data import DataLoader, random_split
 class LoadData:
     """Download, split and shuffle dataset into train, validate, test and pool"""
 
-    def __init__(self):
+    def __init__(self, val_size: int = 100):
+        self.train_size = 10000
+        self.val_size = val_size
+        self.pool_size = 60000 - self.train_size - self.val_size
         self.mnist_train, self.mnist_test = self.download_dataset()
         (
             self.X_train_All,
@@ -49,29 +52,16 @@ class LoadData:
         mnist_test = MNIST(".", train=False, download=download, transform=transform)
         return mnist_train, mnist_test
 
-    def split_and_load_dataset(
-        self,
-        train_size: int = 10000,
-        val_size: int = 5000,
-        pool_size: int = 45000,
-    ):
-        """Split all training datatset into train, validate, pool sets and load them accordingly.
-
-        Attributes:
-            all_training_set: MNIST training dataset,
-            test_set: MNIST test dataset
-            training_size: Training data size,
-            val_size: Validation data size,
-            pool_size: Pool set size
-        """
+    def split_and_load_dataset(self):
+        """Split all training datatset into train, validate, pool sets and load them accordingly."""
         train_set, val_set, pool_set = random_split(
-            self.mnist_train, [train_size, val_size, pool_size]
+            self.mnist_train, [self.train_size, self.val_size, self.pool_size]
         )
         train_loader = DataLoader(
-            dataset=train_set, batch_size=train_size, shuffle=True
+            dataset=train_set, batch_size=self.train_size, shuffle=True
         )
-        val_loader = DataLoader(dataset=val_set, batch_size=val_size, shuffle=True)
-        pool_loader = DataLoader(dataset=pool_set, batch_size=pool_size, shuffle=True)
+        val_loader = DataLoader(dataset=val_set, batch_size=self.val_size, shuffle=True)
+        pool_loader = DataLoader(dataset=pool_set, batch_size=self.pool_size, shuffle=True)
         test_loader = DataLoader(
             dataset=self.mnist_test, batch_size=10000, shuffle=True
         )

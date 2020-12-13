@@ -43,7 +43,7 @@ def active_learning_procedure(
         learner.teach(X_pool[query_idx], y_pool[query_idx], only_new=True)
         X_pool = np.delete(X_pool, query_idx, axis=0)
         y_pool = np.delete(y_pool, query_idx, axis=0)
-        model_accuracy_val = learner.score(X_val, y_val)
+        model_accuracy_val = learner.score(X_val, y_val, verbose=0)
         if (index + 1) % 5 == 0:
             print(f"Val Accuracy after query {index+1}: {model_accuracy_val:0.4f}")
         perf_hist.append(model_accuracy_val)

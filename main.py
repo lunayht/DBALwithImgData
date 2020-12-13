@@ -135,6 +135,13 @@ def main():
         help="acqusition functions: 0-all, 1-uniform, 2-max_entropy, \
                             3-bald, 4-var_ratios (default: 0)",
     )
+    parser.add_argument(
+        "--val_size",
+        type=int,
+        default=100,
+        metavar="V",
+        help="validation set size (default: 100)",
+    )
 
     args = parser.parse_args()
     torch.manual_seed(args.seed)
@@ -142,7 +149,7 @@ def main():
     print(f"Using device: {device}")
 
     datasets = dict()
-    DataLoader = LoadData()
+    DataLoader = LoadData(args.val_size)
     (
         datasets["X_init"],
         datasets["y_init"],

@@ -14,9 +14,7 @@ class ConvNN(nn.Module):
         maxpool: int = 2,
     ):
         """
-        Basic Architecture of CNN proposed in the paper, I have modified softmax
-        activation function to logsoftmax to penalise large error and improve training
-        efficiency.
+        Basic Architecture of CNN
 
         Attributes:
             num_filters: Number of filters, out channel for 1st and 2nd conv layers,
@@ -50,6 +48,5 @@ class ConvNN(nn.Module):
         x = self.fc1(x)
         x = F.relu(x)
         x = self.dropout2(x)
-        x = self.fc2(x)
-        out = F.log_softmax(x, dim=1)
+        out = self.fc2(x)
         return out
