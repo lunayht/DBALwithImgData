@@ -9,8 +9,9 @@ from load_data import LoadData
 from cnn_model import ConvNN
 from active_learning import select_acq_function, active_learning_procedure
 
+
 def load_CNN_model(args, device):
-    """Load new model each time for different acqusition function 
+    """Load new model each time for different acqusition function
     each experiments"""
     model = ConvNN().to(device)
     cnn_classifier = NeuralNetClassifier(
@@ -26,11 +27,13 @@ def load_CNN_model(args, device):
     )
     return cnn_classifier
 
+
 def plot_results(data: dict):
     for key in data.keys():
         plt.plot(data[key], label=key)
         print(data[key])
     plt.show()
+
 
 def train_active_learning(args, device, datasets: dict) -> dict:
     """Start training process
@@ -70,11 +73,12 @@ def train_active_learning(args, device, datasets: dict) -> dict:
             avg_hist.append(training_hist)
             test_scores.append(test_score)
         avg_hist = np.average(np.array(avg_hist), axis=0)
-        avg_test = sum(test_scores)/len(test_scores)
+        avg_test = sum(test_scores) / len(test_scores)
         print(f"Average Test score for {acq_func_name}: {avg_test}")
         results[acq_func_name] = avg_hist.tolist()
     print("--------------- Done Training! ---------------")
     plot_results(results)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -151,6 +155,7 @@ def main():
     ) = DataLoader.load_all()
 
     results = train_active_learning(args, device, datasets)
+
 
 if __name__ == "__main__":
     main()

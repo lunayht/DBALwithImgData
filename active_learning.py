@@ -1,5 +1,5 @@
-import numpy as np
 import torch
+import numpy as np
 from modAL.models import ActiveLearner
 
 from acquisition_functions import uniform, max_entropy, bald, var_ratios
@@ -55,7 +55,7 @@ def active_learning_procedure(
         X_pool = np.delete(X_pool, query_idx, axis=0)
         y_pool = np.delete(y_pool, query_idx, axis=0)
         model_accuracy_val = learner.score(X_val, y_val)
-        if (index+1)%5 == 0:
+        if (index + 1) % 5 == 0:
             print(f"Val Accuracy after query {index+1}: {model_accuracy_val:0.4f}")
         perf_hist.append(model_accuracy_val)
     model_accuracy_test = learner.score(X_test, y_test)
@@ -75,6 +75,6 @@ def select_acq_function(acq_func: int = 0) -> list:
         1: [uniform],
         2: [max_entropy],
         3: [bald],
-        4: [var_ratios]
+        4: [var_ratios],
     }
     return acq_func_dict[acq_func]

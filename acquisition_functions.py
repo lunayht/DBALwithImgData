@@ -1,31 +1,14 @@
-import numpy as np
 import torch
+import numpy as np
+from scipy import stats
 
 
-def uniform(model, X_pool: torch.Tensor, n_query: int = 10):
-    """Baseline acquisition a(x) = unif() with unif() a function
-    returning a draw from a uniform distribution over the interval [0,1].
-    Using this acquisition function is equivalent to choosing a point
-    uniformly at random from the pool.
-
-    Attributes:
-        X_pool: Pool set to select uncertainty,
-        n_query: Number of points that randomly select from pool set
-    """
-    query_idx = np.random.choice(range(len(X_pool)), size=n_query, replace=False)
-    return query_idx, X_pool[query_idx]
-
-
-def shannon_entropy_function(
-    model, X_pool: torch.Tensor, T: int = 100, E_H: bool = False
-):
-    """H[y|x,D_train] := - sum_{c} p(y=c|x,D_train)log p(y=c|x,D_train)
+def predictions_from_pool(X_pool: np.ndarray, T: int = 100):
+    """Run random_subset prediction on model and return the output
 
     Attributes:
-        model: Model that is ready to measure uncertainty after training,
         X_pool: Pool set to select uncertainty,
         T: Number of MC dropout iterations aka training iterations,
-        E_H: If True, compute H and EH for BALD (default: False)
     """
     random_subset = np.random.choice(range(len(X_pool)), size=2000, replace=False)
     with torch.no_grad():
@@ -40,6 +23,35 @@ def shannon_entropy_function(
                 for t in range(T)
             ]
         )
+    return outputs, random_subset
+
+
+def uniform(model, X_pool: np.ndarray, n_query: int = 10):
+    """Baseline acquisition a(x) = unif() with unif() a function
+    returning a draw from a uniform distribution over the interval [0,1].
+    Using this acquisition function is equivalent to choosing a point
+    uniformly at random from the pool.
+
+    Attributes:
+        X_pool: Pool set to select uncertainty,
+        n_query: Number of points that randomly select from pool set
+    """
+    query_idx = np.random.choice(range(len(X_pool)), size=n_query, replace=False)
+    return query_idx, X_pool[query_idx]
+
+
+def shannon_entropy_function(
+    model, X_pool: np.ndarray, T: int = 100, E_H: bool = False
+):
+    """H[y|x,D_train] := - sum_{c} p(y=c|x,D_train)log p(y=c|x,D_train)
+
+    Attributes:
+        model: Model that is ready to measure uncertainty after training,
+        X_pool: Pool set to select uncertainty,
+        T: Number of MC dropout iterations aka training iterations,
+        E_H: If True, compute H and EH for BALD (default: False)
+    """
+    output, random_subset = predictions_from_pool(X_pool, T)
     pc = outputs.mean(axis=0)
     H = (-pc * np.log(pc + 1e-10)).sum(axis=-1)
     if E_H:
@@ -48,7 +60,7 @@ def shannon_entropy_function(
     return H, random_subset
 
 
-def max_entropy(model, X_pool: torch.Tensor, n_query: int = 10, T: int = 100):
+def max_entropy(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
     """Choose pool points that maximise the predictive entropy.
     Using Shannon entropy function.
 
@@ -64,7 +76,7 @@ def max_entropy(model, X_pool: torch.Tensor, n_query: int = 10, T: int = 100):
     return query_idx, X_pool[query_idx]
 
 
-def bald(model, X_pool: torch.Tensor, n_query: int = 10, T: int = 100):
+def bald(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
     """Choose pool points that are expected to maximise the information
     gained about the model parameters, i.e. maximise the mutal information
     between predictions and model posterior. Given
@@ -88,29 +100,20 @@ def bald(model, X_pool: torch.Tensor, n_query: int = 10, T: int = 100):
     return query_idx, X_pool[query_idx]
 
 
-def var_ratios(model, X_pool: torch.Tensor, n_query: int = 10, T: int = 100):
+def var_ratios(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
     """Like Max Entropy but Variational Ratios measures lack of confidence.
     Given: variational_ratio[x] := 1 - max_{y} p(y|x,D_{train})
-    
+
     Attributes:
         model: Model that is ready to measure uncertainty after training,
         X_pool: Pool set to select uncertainty,
         n_query: Number of points that maximise var_ratios a(x) from pool set,
         T: Number of MC dropout iterations aka training iterations
     """
-    random_subset = np.random.choice(range(len(X_pool)), size=2000, replace=False)
-    with torch.no_grad():
-        outputs = np.stack(
-            [
-                torch.softmax(
-                    model.estimator.forward(X_pool[random_subset], training=True),
-                    dim=-1,
-                )
-                .cpu()
-                .numpy()
-                for t in range(T)
-            ]
-        )
-    mode_y = outputs.mode()
-    
+    output, random_subset = predictions_from_pool(X_pool, T)
+    preds = np.argmax(outputs, axis=2)
+    _, count = stats.mode(preds, axis=0)
+    acquisition = (1 - count / preds.shape[1]).reshape((-1,))
+    idx = (-acquisition).argsort()[:n_query]
+    query_idx = random_subset[idx]
     return query_idx, X_pool[query_idx]
