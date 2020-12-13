@@ -71,7 +71,7 @@ def select_acq_function(acq_func: int = 0) -> list:
                   4-var_ratios
     """
     acq_func_dict = {
-        0: [uniform, max_entropy, bald],
+        0: [uniform, max_entropy, bald, var_ratios],
         1: [uniform],
         2: [max_entropy],
         3: [bald],
