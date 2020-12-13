@@ -1,4 +1,5 @@
 import argparse
+import numpy as np
 import torch
 import torch.nn as nn
 from skorch import NeuralNetClassifier
@@ -6,6 +7,15 @@ from skorch import NeuralNetClassifier
 from load_data import LoadData
 from cnn_model import ConvNN
 
+def tensor_to_np(tensor_data: torch.Tensor) -> np.ndarray:
+    """Since Skorch doesn not support dtype of torch.Tensor, we will modify 
+    the dtype to numpy.ndarray
+    
+    Attribute:
+        tensor_data: Data of class type=torch.Tensor
+    """
+    np_data = tensor_data.detach().numpy()
+    return np_data
 
 def train(args, model, device, train_loader, optimizer, epoch):
     pass
