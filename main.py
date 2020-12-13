@@ -29,6 +29,7 @@ def load_CNN_model(args, device):
 def plot_results(data: dict):
     for key in data.keys():
         plt.plot(data[key], label=key)
+    plt.show()
 
 def train_active_learning(args, device, datasets: dict) -> dict:
     """Start training process
