@@ -8,7 +8,7 @@ from load_data import LoadData
 from cnn_model import ConvNN
 from active_learning import select_acq_function, active_learning_procedure
 
-def train(args, estimator, device, datasets: dict):
+def train_active_learning(args, estimator, device, datasets: dict):
     """Start training process
     
     Attributes:
@@ -24,14 +24,16 @@ def train(args, estimator, device, datasets: dict):
         acq_func_name = str(acq_func).split(" ")[1]
         print(f"\n---------- Start {acq_func_name} training! ----------")
         for e in range(args.experiments):
-            print(f"*** Experiment Iterations: {e+1}/{args.experiments} ***")
-            training_hist = active_learning_procedure(
-                acq_func, datasets["X_test"], datasets["y_test"], \
-                datasets["X_pool"], datasets["y_pool"], datasets["X_init"], \
-                datasets["y_init"], estimator, args.dropout_iter, args.query)
+            print(f"********** Experiment Iterations: {e+1}/{args.experiments} **********")
+            training_hist, test_score = active_learning_procedure(
+                acq_func, datasets["X_val"], datasets["y_val"], \
+                datasets["X_test"], datasets["y_test"], datasets["X_pool"], \
+                datasets["y_pool"], datasets["X_init"], datasets["y_init"], \
+                estimator, args.dropout_iter, args.query)
             avg_hist.append(training_hist)
         avg_hist = np.average(np.array(avg_hist), axis=0)
         results[acq_func_name] = avg_hist
+        results[acq_func_name+"_testscore"] = test_score
     print("Done Training!")
     return results
 
@@ -79,7 +81,7 @@ def main():
                      verbose=0,
                      device=device)
     
-    results = train(args, cnn_classifier, device, datasets)
+    results = train_active_learning(args, cnn_classifier, device, datasets)
 
 
 if __name__ == "__main__":

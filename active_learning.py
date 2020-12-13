@@ -17,6 +17,8 @@ def tensor_to_np(tensor_data: torch.Tensor) -> np.ndarray:
 
 def active_learning_procedure(
     query_strategy,
+    X_val: np.ndarray,
+    y_val: np.ndarray,
     X_test: np.ndarray,
     y_test: np.ndarray,
     X_pool: np.ndarray,
@@ -31,6 +33,7 @@ def active_learning_procedure(
 
     Attributes:
         query_strategy: Choose between Uniform(baseline), max_entropy, bald,
+        X_val, y_val: Validation dataset,
         X_test, y_test: Test dataset,
         X_pool, y_pool: Query pool set,
         X_init, y_init: Initial training set data points,
@@ -50,10 +53,12 @@ def active_learning_procedure(
         learner.teach(X_pool[query_idx], y_pool[query_idx])
         X_pool = np.delete(X_pool, query_idx, axis=0)
         y_pool = np.delete(y_pool, query_idx, axis=0)
-        model_accuracy = learner.score(X_test, y_test)
-        print(f"Accuracy after query {index+1}: {model_accuracy:0.4f}")
-        perf_hist.append(model_accuracy)
-    return perf_hist
+        model_accuracy_val = learner.score(X_val, y_val)
+        print(f"Val_Accuracy after query {index+1}: {model_accuracy_val:0.4f}")
+        perf_hist.append(model_accuracy_val)
+    model_accuracy_test = learner.score(X_test, y_test)
+    print(f"********** Test Accuracy per experiment: {model_accuracy_test} **********")
+    return perf_hist, model_accuracy_test
 
 def select_acq_function(acq_func: int = 0) -> list:
     """Choose types of acqusition function
