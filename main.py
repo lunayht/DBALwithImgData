@@ -8,8 +8,23 @@ from load_data import LoadData
 from cnn_model import ConvNN
 from active_learning import select_acq_function, active_learning_procedure
 
+def load_CNN_model(args, device):
+    """Load new model each time for different acqusition function"""
+    model = ConvNN().to(device)
+    cnn_classifier = NeuralNetClassifier(
+        module=model,
+        lr=args.lr,
+        batch_size=args.batch_size,
+        max_epochs=args.epochs,
+        criterion=nn.CrossEntropyLoss,
+        optimizer=torch.optim.Adam,
+        train_split=None,
+        verbose=0,
+        device=device,
+    )
+    return cnn_classifier
 
-def train_active_learning(args, estimator, device, datasets: dict) -> dict:
+def train_active_learning(args, device, datasets: dict) -> dict:
     """Start training process
 
     Attributes:
@@ -25,6 +40,7 @@ def train_active_learning(args, estimator, device, datasets: dict) -> dict:
         avg_hist = []
         test_scores = []
         acq_func_name = str(acq_func).split(" ")[1]
+        estimator = load_CNN_model(args, device)
         print(f"\n---------- Start {acq_func_name} training! ----------")
         for e in range(args.experiments):
             print(
@@ -128,20 +144,7 @@ def main():
         datasets["y_test"],
     ) = DataLoader.load_all()
 
-    model = ConvNN().to(device)
-    cnn_classifier = NeuralNetClassifier(
-        module=model,
-        lr=args.lr,
-        batch_size=args.batch_size,
-        max_epochs=args.epochs,
-        criterion=nn.CrossEntropyLoss,
-        optimizer=torch.optim.Adam,
-        train_split=None,
-        verbose=0,
-        device=device,
-    )
-
-    results = train_active_learning(args, cnn_classifier, device, datasets)
+    results = train_active_learning(args, device, datasets)
     print(f"Average test score for each acquisition function are:")
     for i, score in results["testscore"]:
         print(f"{i+1}. {score:0.4f}")
