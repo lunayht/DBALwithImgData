@@ -29,6 +29,7 @@ def load_CNN_model(args, device):
 def plot_results(data: dict):
     for key in data.keys():
         plt.plot(data[key], label=key)
+        print(data[key])
     plt.show()
 
 def train_active_learning(args, device, datasets: dict) -> dict:
@@ -128,7 +129,7 @@ def main():
         default=0,
         metavar="AF",
         help="acqusition functions: 0-all, 1-uniform, 2-max_entropy, \
-                            3-bald (default: 0)",
+                            3-bald, 4-var_ratios (default: 0)",
     )
 
     args = parser.parse_args()

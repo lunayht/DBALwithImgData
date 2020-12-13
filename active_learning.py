@@ -67,12 +67,14 @@ def select_acq_function(acq_func: int = 0) -> list:
     """Choose types of acqusition function
 
     Attributes:
-        acq_func: 0-all(unif, max_entropy, bald), 1-unif, 2-maxentropy, 3-bald
+        acq_func: 0-all(unif, max_entropy, bald), 1-unif, 2-maxentropy, 3-bald, \
+                  4-var_ratios
     """
     acq_func_dict = {
         0: [uniform, max_entropy, bald],
         1: [uniform],
         2: [max_entropy],
         3: [bald],
+        4: [var_ratios]
     }
     return acq_func_dict[acq_func]

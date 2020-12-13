@@ -88,6 +88,29 @@ def bald(model, X_pool: torch.Tensor, n_query: int = 10, T: int = 100):
     return query_idx, X_pool[query_idx]
 
 
-def var_ratios():
-    """Like Max Entropy but Variational Ratios measures lack of confidence"""
-    pass
+def var_ratios(model, X_pool: torch.Tensor, n_query: int = 10, T: int = 100):
+    """Like Max Entropy but Variational Ratios measures lack of confidence.
+    Given: variational_ratio[x] := 1 - max_{y} p(y|x,D_{train})
+    
+    Attributes:
+        model: Model that is ready to measure uncertainty after training,
+        X_pool: Pool set to select uncertainty,
+        n_query: Number of points that maximise var_ratios a(x) from pool set,
+        T: Number of MC dropout iterations aka training iterations
+    """
+    random_subset = np.random.choice(range(len(X_pool)), size=2000, replace=False)
+    with torch.no_grad():
+        outputs = np.stack(
+            [
+                torch.softmax(
+                    model.estimator.forward(X_pool[random_subset], training=True),
+                    dim=-1,
+                )
+                .cpu()
+                .numpy()
+                for t in range(T)
+            ]
+        )
+    mode_y = outputs.mode()
+    
+    return query_idx, X_pool[query_idx]
