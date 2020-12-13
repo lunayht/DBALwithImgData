@@ -67,6 +67,16 @@ Note: ```val_size``` is set to be 100 for Experiment 1. To run Experiment 4, ple
 
 ## Results
 ### 1. Comparison of various acquisition functions
+![exp_1.png](result_img/exp_1.png)
+
+Number of acquired images to get model error of %: (the lower the better)
+| Techniques | 10% error (Paper: Keras) | 10% error (Experiment: Pytorch) | 5% error (Paper: Keras) | 5% error (Experiment: Pytorch) |
+|  :------:  |   :------:   |   :------:   |   :------:   |   :------:   |
+| Random (Baseline) | 255 | 250 | 835 | 517 |
+| BALD | 145 | 150 | 335 | 296 |
+| Var Ratios | 120 | 143 | 295 | 283 |
+| Max Entropy | 165 | 163 | 355 | 310 |
+Best 2 models: Var Ratios, BALD
 
 ### 2. Importance of model uncertainty
 
@@ -75,12 +85,14 @@ Note: ```val_size``` is set to be 100 for Experiment 1. To run Experiment 4, ple
 ### 4. Comparison to semi-supervised learning
 ![exp_4.png](result_img/exp_4.png)
 
+Test error on MNIST with 1000 acquired images, using 5000 validation points:
 | Technique | Test error (Paper: Keras) | Test error (Experiment: Pytorch) |
 |  :-----:  |   :----:   |   :----:   |
 | Random(Baseline) | 4.66% | 3.73% |
 | BALD | 1.80% | 1.81% |
 | Max Entropy | 1.74% | 1.66% |
 | Var Ratios | 1.64% | 1.57% |
+Best 2 models: Var Ratios, Max Entropy
 
 ## Acknowledgements
 1. https://github.com/Riashat/Deep-Bayesian-Active-Learning
