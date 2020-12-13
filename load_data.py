@@ -88,6 +88,8 @@ class LoadData:
             initial_idx = np.concatenate((initial_idx, idx))
         X_init = self.X_train_All[initial_idx]
         y_init = self.y_train_All[initial_idx]
+        print(f"Initial training data points: {X_init.shape[0]}")
+        print(f"Data distribution for each class: {np.bincount(y_init)}")
         return X_init, y_init
 
     def load_all(self):

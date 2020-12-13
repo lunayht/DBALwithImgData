@@ -20,8 +20,10 @@ def train_active_learning(args, estimator, device, datasets: dict) -> dict:
     """
     acq_functions = select_acq_function(args.acq_func)
     results = dict()
-    for acq_func in acq_functions:
+    results["testscore"] = np.zeros((len(acq_functions),1), dtype=float)
+    for i, acq_func in enumerate(acq_functions):
         avg_hist = []
+        test_scores = []
         acq_func_name = str(acq_func).split(" ")[1]
         print(f"\n---------- Start {acq_func_name} training! ----------")
         for e in range(args.experiments):
@@ -43,9 +45,11 @@ def train_active_learning(args, estimator, device, datasets: dict) -> dict:
                 args.query,
             )
             avg_hist.append(training_hist)
+            test_scores.append(test_score)
         avg_hist = np.average(np.array(avg_hist), axis=0)
+        avg_test = np.average(np.array(test_scores), axis=0)
         results[acq_func_name] = avg_hist
-        results[acq_func_name + "_testscore"] = test_score
+        results["testscore"][i] = avg_test
     print("--------------- Done Training! ---------------")
     return results
 
@@ -138,7 +142,9 @@ def main():
     )
 
     results = train_active_learning(args, cnn_classifier, device, datasets)
-
+    print(f"Average test score for each acquisition function are:")
+    for i, score in results["testscore"]:
+        print(f"{i+1}. {score:0.4f}")
 
 if __name__ == "__main__":
     main()
