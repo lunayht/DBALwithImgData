@@ -44,8 +44,16 @@ $ pytest
 ### Launch
 Run
 ```bash
-$ python3 main.py 
+$ python3 main.py --batch_size 128 \
+                  --epochs 50 \
+                  --lr 1e-3 \
+                  --seed 369 \
+                  --experiments 3 \
+                  --dropout_iter 100 \
+                  --query 10 \
+                  --acq_func 0
 ```
+Or use ```--help``` for more info.
 
 ## Acknowledgements
 1. https://github.com/Riashat/Deep-Bayesian-Active-Learning

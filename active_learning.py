@@ -15,6 +15,7 @@ def tensor_to_np(tensor_data: torch.Tensor) -> np.ndarray:
     np_data = tensor_data.detach().numpy()
     return np_data
 
+
 def active_learning_procedure(
     query_strategy,
     X_val: np.ndarray,
@@ -60,14 +61,17 @@ def active_learning_procedure(
     print(f"********** Test Accuracy per experiment: {model_accuracy_test} **********")
     return perf_hist, model_accuracy_test
 
+
 def select_acq_function(acq_func: int = 0) -> list:
     """Choose types of acqusition function
-    
+
     Attributes:
         acq_func: 0-all(unif, max_entropy, bald), 1-unif, 2-maxentropy, 3-bald
     """
-    acq_func_dict = {0: [uniform, max_entropy, bald],
-                1: [uniform],
-                2: [max_entropy],
-                3: [bald]}
+    acq_func_dict = {
+        0: [uniform, max_entropy, bald],
+        1: [uniform],
+        2: [max_entropy],
+        3: [bald],
+    }
     return acq_func_dict[acq_func]

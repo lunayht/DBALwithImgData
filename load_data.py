@@ -7,12 +7,22 @@ from torch.utils.data import DataLoader, random_split
 
 from active_learning import tensor_to_np
 
+
 class LoadData:
     """Download, split and shuffle dataset into train, validate, test and pool"""
+
     def __init__(self):
         self.mnist_train, self.mnist_test = self.download_dataset()
-        self.X_train_All, self.y_train_All, self.X_val, self.y_val, \
-            self.X_pool, self.y_pool, self.X_test, self.y_test = self.split_and_load_dataset()
+        (
+            self.X_train_All,
+            self.y_train_All,
+            self.X_val,
+            self.y_val,
+            self.X_pool,
+            self.y_pool,
+            self.X_test,
+            self.y_test,
+        ) = self.split_and_load_dataset()
         self.X_init, self.y_init = self.preprocess_training_data()
 
     def check_MNIST_folder(self) -> bool:
@@ -49,10 +59,14 @@ class LoadData:
         train_set, val_set, pool_set = random_split(
             self.mnist_train, [train_size, val_size, pool_size]
         )
-        train_loader = DataLoader(dataset=train_set, batch_size=train_size, shuffle=True)
+        train_loader = DataLoader(
+            dataset=train_set, batch_size=train_size, shuffle=True
+        )
         val_loader = DataLoader(dataset=val_set, batch_size=val_size, shuffle=True)
         pool_loader = DataLoader(dataset=pool_set, batch_size=pool_size, shuffle=True)
-        test_loader = DataLoader(dataset=self.mnist_test, batch_size=10000, shuffle=True)
+        test_loader = DataLoader(
+            dataset=self.mnist_test, batch_size=10000, shuffle=True
+        )
         X_train_All, y_train_All = next(iter(train_loader))
         X_val, y_val = next(iter(val_loader))
         X_pool, y_pool = next(iter(pool_loader))
@@ -68,7 +82,9 @@ class LoadData:
         """
         initial_idx = np.array([], dtype=np.int)
         for i in range(10):
-            idx = np.random.choice(np.where(self.y_train_All == i)[0], size=2, replace=False)
+            idx = np.random.choice(
+                np.where(self.y_train_All == i)[0], size=2, replace=False
+            )
             initial_idx = np.concatenate((initial_idx, idx))
         X_init = self.X_train_All[initial_idx]
         y_init = self.y_train_All[initial_idx]
@@ -76,8 +92,13 @@ class LoadData:
 
     def load_all(self):
         """Load all data"""
-        return tensor_to_np(self.X_init), tensor_to_np(self.y_init), \
-            tensor_to_np(self.X_train_All), tensor_to_np(self.y_train_All), \
-            tensor_to_np(self.X_val), tensor_to_np(self.y_val), \
-            tensor_to_np(self.X_pool), tensor_to_np(self.y_pool), \
-            tensor_to_np(self.X_test), tensor_to_np(self.y_test) 
+        return (
+            tensor_to_np(self.X_init),
+            tensor_to_np(self.y_init),
+            tensor_to_np(self.X_val),
+            tensor_to_np(self.y_val),
+            tensor_to_np(self.X_pool),
+            tensor_to_np(self.y_pool),
+            tensor_to_np(self.X_test),
+            tensor_to_np(self.y_test),
+        )
