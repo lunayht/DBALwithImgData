@@ -14,9 +14,14 @@ Compare various acquisition functions: Bayesian Active Learning by Disagreement 
 
 All models are trained on MNIST dataset with random initial training set of 20 datapoints and a validation set of 100 points on optimised weight decay. A standard test set of 10K is used and the rest of the points are used as pool set. The test error of each model and each acquisition function is assessed after each acquisition using dropout approximation at test time. 
 
-Monte Carlo dropout is used to decide which datapoints to query next. Repeat the acquisition process for 100 times and acquiring 10 points that maximise the functions for each time.  
+Monte Carlo dropout is used to decide which datapoints to query next. Repeat the acquisition process for 100 times and acquiring 10 points that maximise the functions for each time. (Total acq points=1000)
 
 ## Getting Started
+This repo consists of 4 experiments conducted in the paper which are:
+1. Comparison of various acquisition functions
+2. Importance of model uncertainty
+3. Comparison to current active learning technqiues with image data (Minimum Bayes Risk, MBR)
+4. Comparison to semi-supervised learning
 ### Prerequisites
 - Python 3.5 or later
 
@@ -53,9 +58,29 @@ $ python3 main.py --batch_size 128 \
                   --experiments 3 \
                   --dropout_iter 100 \
                   --query 10 \
-                  --acq_func 0
+                  --acq_func 0 \
+                  --val_size 100
 ```
 Or use ```--help``` for more info.
+
+Note: ```val_size``` is set to be 100 for Experiment 1. To run Experiment 4, please set this value to 5000.
+
+## Results
+### 1. Comparison of various acquisition functions
+
+### 2. Importance of model uncertainty
+
+### 3. Comparison to current active learning techniques
+
+### 4. Comparison to semi-supervised learning
+![exp_4.png](result_img/exp_4.png)
+
+| Technique | Test error (Paper: Keras) | Test error (Experiment: Pytorch) |
+|  :-----:  |   :----:   |   :----:   |
+| Random(Baseline) | 4.66% | 3.733% |
+| BALD | 1.80% | 1.81% |
+| Max Entropy | 1.74% | 1.66% |
+| Var Ratios | 1.64% | 1.57% |
 
 ## Acknowledgements
 1. https://github.com/Riashat/Deep-Bayesian-Active-Learning
