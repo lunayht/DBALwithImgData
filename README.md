@@ -76,6 +76,7 @@ Number of acquired images to get model error of %: (the lower the better)
 | BALD | 145 | 150 | 335 | 296 |
 | Var Ratios | 120 | 143 | 295 | 283 |
 | Max Entropy | 165 | 163 | 355 | 310 |
+
 Best 2 models: Var Ratios, BALD
 
 ### 2. Importance of model uncertainty
@@ -92,6 +93,7 @@ Test error on MNIST with 1000 acquired images, using 5000 validation points:
 | BALD | 1.80% | 1.81% |
 | Max Entropy | 1.74% | 1.66% |
 | Var Ratios | 1.64% | 1.57% |
+
 Best 2 models: Var Ratios, Max Entropy
 
 ## Acknowledgements
