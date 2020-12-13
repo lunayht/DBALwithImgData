@@ -4,17 +4,18 @@ from scipy import stats
 
 
 def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100):
-    """Run prediction on model and return the output
+    """Run random_subset prediction on model and return the output
 
     Attributes:
         X_pool: Pool set to select uncertainty,
         T: Number of MC dropout iterations aka training iterations,
     """
+    random_subset = np.random.choice(range(len(X_pool)), size=2000, replace=False)
     with torch.no_grad():
         outputs = np.stack(
             [
                 torch.softmax(
-                    model.estimator.forward(X_pool, training=True),
+                    model.estimator.forward(X_pool[random_subset], training=True),
                     dim=-1,
                 )
                 .cpu()
@@ -22,7 +23,7 @@ def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100):
                 for t in range(T)
             ]
         )
-    return outputs
+    return outputs, random_subset
 
 
 def uniform(model, X_pool: np.ndarray, n_query: int = 10):
@@ -50,13 +51,13 @@ def shannon_entropy_function(
         T: Number of MC dropout iterations aka training iterations,
         E_H: If True, compute H and EH for BALD (default: False)
     """
-    outputs = predictions_from_pool(model, X_pool, T)
+    outputs, random_subset = predictions_from_pool(model, X_pool, T)
     pc = outputs.mean(axis=0)
     H = (-pc * np.log(pc + 1e-10)).sum(axis=-1)
     if E_H:
         E = -np.mean(np.sum(outputs * np.log(outputs + 1e-10), axis=-1), axis=0)
-        return H, E
-    return H
+        return H, E, random_subset
+    return H, random_subset
 
 
 def max_entropy(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
@@ -69,9 +70,10 @@ def max_entropy(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
         n_query: Number of points that maximise max_entropy a(x) from pool set,
         T: Number of MC dropout iterations aka training iterations
     """
-    acquisition = shannon_entropy_function(model, X_pool, T)
+    acquisition, random_subset = shannon_entropy_function(model, X_pool, T)
     idx = (-acquisition).argsort()[:n_query]
-    return idx, X_pool[idx]
+    query_idx = random_subset[idx]
+    return query_idx, X_pool[query_idx]
 
 
 def bald(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
@@ -91,11 +93,11 @@ def bald(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
         n_query: Number of points that maximise bald a(x) from pool set,
         T: Number of MC dropout iterations aka training iterations
     """
-    H, E_H = shannon_entropy_function(model, X_pool, T, E_H=True)
+    H, E_H, random_subset = shannon_entropy_function(model, X_pool, T, E_H=True)
     acquisition = H - E_H
     idx = (-acquisition).argsort()[:n_query]
-    idx = (-acquisition).argsort()[:n_query]
-    return idx, X_pool[idx]
+    query_idx = random_subset[idx]
+    return query_idx, X_pool[query_idx]
 
 
 def var_ratios(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
@@ -108,9 +110,10 @@ def var_ratios(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
         n_query: Number of points that maximise var_ratios a(x) from pool set,
         T: Number of MC dropout iterations aka training iterations
     """
-    outputs = predictions_from_pool(model, X_pool, T)
+    outputs, random_subset = predictions_from_pool(model, X_pool, T)
     preds = np.argmax(outputs, axis=2)
     _, count = stats.mode(preds, axis=0)
     acquisition = (1 - count / preds.shape[1]).reshape((-1,))
     idx = (-acquisition).argsort()[:n_query]
-    return idx, X_pool[idx]
+    query_idx = random_subset[idx]
+    return query_idx, X_pool[query_idx]
