@@ -3,7 +3,7 @@ import numpy as np
 from scipy import stats
 
 
-def predictions_from_pool(X_pool: np.ndarray, T: int = 100):
+def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100):
     """Run random_subset prediction on model and return the output
 
     Attributes:
@@ -51,7 +51,7 @@ def shannon_entropy_function(
         T: Number of MC dropout iterations aka training iterations,
         E_H: If True, compute H and EH for BALD (default: False)
     """
-    output, random_subset = predictions_from_pool(X_pool, T)
+    output, random_subset = predictions_from_pool(model, X_pool, T)
     pc = outputs.mean(axis=0)
     H = (-pc * np.log(pc + 1e-10)).sum(axis=-1)
     if E_H:
@@ -110,7 +110,7 @@ def var_ratios(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100):
         n_query: Number of points that maximise var_ratios a(x) from pool set,
         T: Number of MC dropout iterations aka training iterations
     """
-    output, random_subset = predictions_from_pool(X_pool, T)
+    output, random_subset = predictions_from_pool(model, X_pool, T)
     preds = np.argmax(outputs, axis=2)
     _, count = stats.mode(preds, axis=0)
     acquisition = (1 - count / preds.shape[1]).reshape((-1,))
