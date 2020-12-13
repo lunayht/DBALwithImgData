@@ -2,6 +2,7 @@ import argparse
 import numpy as np
 import torch
 import torch.nn as nn
+import matplotlib.pyplot as plt
 from skorch import NeuralNetClassifier
 
 from load_data import LoadData
@@ -25,6 +26,10 @@ def load_CNN_model(args, device):
     )
     return cnn_classifier
 
+def plot_results(data: dict):
+    for key in data.keys():
+        plt.plot(data[key], label=key)
+
 def train_active_learning(args, device, datasets: dict) -> dict:
     """Start training process
 
@@ -36,7 +41,6 @@ def train_active_learning(args, device, datasets: dict) -> dict:
     """
     acq_functions = select_acq_function(args.acq_func)
     results = dict()
-    results["testscore"] = np.zeros((len(acq_functions),1), dtype=float)
     for i, acq_func in enumerate(acq_functions):
         avg_hist = []
         test_scores = []
@@ -64,13 +68,11 @@ def train_active_learning(args, device, datasets: dict) -> dict:
             avg_hist.append(training_hist)
             test_scores.append(test_score)
         avg_hist = np.average(np.array(avg_hist), axis=0)
-        avg_test = np.average(np.array(test_scores), axis=0)
+        avg_test = sum(test_scores)/len(test_scores)
         print(f"Average Test score for {acq_func_name}: {avg_test}")
         results[acq_func_name] = avg_hist.tolist()
-        results["testscore"][i] = avg_test
     print("--------------- Done Training! ---------------")
-    return results
-
+    plot_results(results)
 
 def main():
     parser = argparse.ArgumentParser()
