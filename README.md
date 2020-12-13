@@ -57,8 +57,6 @@ $ python3 main.py --batch_size 128 \
 ```
 Or use ```--help``` for more info.
 
-Colab implementation can be found [here](https://colab.research.google.com/drive/13rz2Rq472mzpq2hb-cWaXFAPuE8z_PBW?usp=sharing).
-
 ## Acknowledgements
 1. https://github.com/Riashat/Deep-Bayesian-Active-Learning
 2. https://github.com/damienlancry/DBAL 
