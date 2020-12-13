@@ -65,6 +65,9 @@ Or use ```--help``` for more info.
 
 Note: ```val_size``` is set to be 100 for Experiment 1. To run Experiment 4, please set this value to 5000.
 
+#### Google Colab
+https://colab.research.google.com/drive/1hkQcSYt24J7wcW8hyqfYpg7gcs3cFmo3?usp=sharing
+
 ## Results
 ### 1. Comparison of various acquisition functions
 ![exp_1.png](result_img/exp_1.png)
