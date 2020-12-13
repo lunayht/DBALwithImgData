@@ -77,7 +77,7 @@ Note: ```val_size``` is set to be 100 for Experiment 1. To run Experiment 4, ple
 
 | Technique | Test error (Paper: Keras) | Test error (Experiment: Pytorch) |
 |  :-----:  |   :----:   |   :----:   |
-| Random(Baseline) | 4.66% | 3.733% |
+| Random(Baseline) | 4.66% | 3.73% |
 | BALD | 1.80% | 1.81% |
 | Max Entropy | 1.74% | 1.66% |
 | Var Ratios | 1.64% | 1.57% |
