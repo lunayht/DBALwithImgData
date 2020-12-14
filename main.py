@@ -39,15 +39,16 @@ def plot_results(data: dict):
 
 def print_elapsed_time(start_time: float, exp: int, acq_func: str):
     """Print elapsed time for each experiment of acquiring
-    
+
     Attributes:
         start_time: Starting time (in time.time()),
         exp: Experiment iteration
         acq_func: Name of acquisition function
     """
-    elapsed_time = start_time - time.time()
-    str_elapsed_time = time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
-    print(f"********** Experiment {exp} ({acq_func}): {str_elapsed_time} **********")
+    elp = start_time - time.time()
+    print(
+        f"********** Experiment {exp} ({acq_func}): {elp//3600:0.2d}:{elp%3600//60:0.2d}:{elp%60//1:0.2d} **********"
+    )
 
 
 def train_active_learning(args, device, datasets: dict) -> dict:
@@ -88,7 +89,7 @@ def train_active_learning(args, device, datasets: dict) -> dict:
             )
             avg_hist.append(training_hist)
             test_scores.append(test_score)
-            print_elapsed_time(start_time, e+1, acq_func_name)
+            print_elapsed_time(start_time, e + 1, acq_func_name)
         avg_hist = np.average(np.array(avg_hist), axis=0)
         avg_test = sum(test_scores) / len(test_scores)
         print(f"Average Test score for {acq_func_name}: {avg_test}")
