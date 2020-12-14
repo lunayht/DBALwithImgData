@@ -52,7 +52,7 @@ def shannon_entropy_function(
         T: Number of MC dropout iterations aka training iterations,
         E_H: If True, compute H and EH for BALD (default: False)
     """
-    outputs, random_subset = predictions_from_pool(model, X_pool, T, training)
+    outputs, random_subset = predictions_from_pool(model, X_pool, T, training=training)
     pc = outputs.mean(axis=0)
     H = (-pc * np.log(pc + 1e-10)).sum(axis=-1)
     if E_H:
@@ -71,7 +71,7 @@ def max_entropy(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, trai
         n_query: Number of points that maximise max_entropy a(x) from pool set,
         T: Number of MC dropout iterations aka training iterations
     """
-    acquisition, random_subset = shannon_entropy_function(model, X_pool, T, training)
+    acquisition, random_subset = shannon_entropy_function(model, X_pool, T, training=training)
     idx = (-acquisition).argsort()[:n_query]
     query_idx = random_subset[idx]
     return query_idx, X_pool[query_idx]
@@ -94,7 +94,7 @@ def bald(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: b
         n_query: Number of points that maximise bald a(x) from pool set,
         T: Number of MC dropout iterations aka training iterations
     """
-    H, E_H, random_subset = shannon_entropy_function(model, X_pool, T, E_H=True, training)
+    H, E_H, random_subset = shannon_entropy_function(model, X_pool, T, E_H=True, training=training)
     acquisition = H - E_H
     idx = (-acquisition).argsort()[:n_query]
     query_idx = random_subset[idx]
