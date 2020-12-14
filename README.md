@@ -65,7 +65,7 @@ $ python3 main.py --batch_size 128 \
 Or use ```--help``` for more info.
 
 #### Note
-- ```--deterministic``` is set as ```False``` by default for Experiment 1, set this to ```True``` to run Experiment 2.
+- ```--determ``` is set as ```False``` by default for Experiment 1, set this to ```True``` to run Experiment 2.
 - ```--val_size``` is set as ```100``` by default for Experiment 1. To run Experiment 4, please set this to ```5000```.
 
 #### Google Colab
