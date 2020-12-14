@@ -18,6 +18,7 @@ def active_learning_procedure(
     estimator,
     T: int = 100,
     n_query: int = 10,
+    training: bool = True
 ):
     """Active Learning Procedure
 
@@ -29,7 +30,8 @@ def active_learning_procedure(
         X_init, y_init: Initial training set data points,
         estimator: Neural Network architecture, e.g. CNN,
         T: Number of MC dropout iterations (repeat acqusition process T times),
-        n_query: Number of points to query from X_pool
+        n_query: Number of points to query from X_pool,
+        training: If False, run test without MC Dropout (default: True)
     """
     learner = ActiveLearner(
         estimator=estimator,
@@ -39,7 +41,7 @@ def active_learning_procedure(
     )
     perf_hist = [learner.score(X_test, y_test)]
     for index in range(T):
-        query_idx, query_instance = learner.query(X_pool, n_query)
+        query_idx, query_instance = learner.query(X_pool, n_query, training)
         learner.teach(X_pool[query_idx], y_pool[query_idx])
         X_pool = np.delete(X_pool, query_idx, axis=0)
         y_pool = np.delete(y_pool, query_idx, axis=0)

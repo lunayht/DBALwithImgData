@@ -59,11 +59,14 @@ $ python3 main.py --batch_size 128 \
                   --dropout_iter 100 \
                   --query 10 \
                   --acq_func 0 \
-                  --val_size 100
+                  --val_size 100 \
+                  --determ False
 ```
 Or use ```--help``` for more info.
 
-Note: ```val_size``` is set to be 100 for Experiment 1. To run Experiment 4, please set this value to 5000.
+#### Note
+- ```--deterministic``` is set as ```False``` by default for Experiment 1, set this to ```True``` to run Experiment 2.
+- ```--val_size``` is set as ```100``` by default for Experiment 1. To run Experiment 4, please set this to ```5000```.
 
 #### Google Colab
 https://colab.research.google.com/drive/1hkQcSYt24J7wcW8hyqfYpg7gcs3cFmo3?usp=sharing
@@ -79,6 +82,12 @@ Number of acquired images to get model error of %: (the lower the better)
 | BALD | 145 | 150 | 335 | 296 |
 | Var Ratios | 120 | 143 | 295 | 283 |
 | Max Entropy | 165 | 163 | 355 | 310 |
+
+#### Average running time for each experiment (2000 random subset from pool, 100 validation points)
+- Random: ~2m 17s
+- BALD: 
+- Var Ratios: 
+- Max Entropy: ~10m 50s
 
 Best 2 models: Var Ratios, BALD
 

@@ -47,7 +47,7 @@ def print_elapsed_time(start_time: float, exp: int, acq_func: str):
     """
     elp = time.time() - start_time
     print(
-        f"********** Experiment {exp} ({acq_func}): {elp//3600}:{elp%3600//60}:{elp%60//1} **********"
+        f"********** Experiment {exp} ({acq_func}): {int(elp//3600)}:{int(elp%3600//60)}:{int(elp%60)} **********"
     )
 
 
@@ -62,38 +62,45 @@ def train_active_learning(args, device, datasets: dict) -> dict:
     """
     acq_functions = select_acq_function(args.acq_func)
     results = dict()
-    for i, acq_func in enumerate(acq_functions):
-        avg_hist = []
-        test_scores = []
-        acq_func_name = str(acq_func).split(" ")[1]
-        print(f"\n---------- Start {acq_func_name} training! ----------")
-        for e in range(args.experiments):
-            start_time = time.time()
-            estimator = load_CNN_model(args, device)
-            print(
-                f"********** Experiment Iterations: {e+1}/{args.experiments} **********"
-            )
-            training_hist, test_score = active_learning_procedure(
-                acq_func,
-                datasets["X_val"],
-                datasets["y_val"],
-                datasets["X_test"],
-                datasets["y_test"],
-                datasets["X_pool"],
-                datasets["y_pool"],
-                datasets["X_init"],
-                datasets["y_init"],
-                estimator,
-                args.dropout_iter,
-                args.query,
-            )
-            avg_hist.append(training_hist)
-            test_scores.append(test_score)
-            print_elapsed_time(start_time, e + 1, acq_func_name)
-        avg_hist = np.average(np.array(avg_hist), axis=0)
-        avg_test = sum(test_scores) / len(test_scores)
-        print(f"Average Test score for {acq_func_name}: {avg_test}")
-        results[acq_func_name] = avg_hist.tolist()
+    if args.determ:
+        state_loop = [True, False] # dropout VS non-dropout
+    else:
+        state_loop = [True] # run dropout only
+    
+    for state in state_loop:
+        for i, acq_func in enumerate(acq_functions):
+            avg_hist = []
+            test_scores = []
+            acq_func_name = str(acq_func).split(" ")[1] + ", MC dropout: " + str(state)
+            print(f"\n---------- Start {acq_func_name}: Stochastic={state} training! ----------")
+            for e in range(args.experiments):
+                start_time = time.time()
+                estimator = load_CNN_model(args, device)
+                print(
+                    f"********** Experiment Iterations: {e+1}/{args.experiments} **********"
+                )
+                training_hist, test_score = active_learning_procedure(
+                    acq_func,
+                    datasets["X_val"],
+                    datasets["y_val"],
+                    datasets["X_test"],
+                    datasets["y_test"],
+                    datasets["X_pool"],
+                    datasets["y_pool"],
+                    datasets["X_init"],
+                    datasets["y_init"],
+                    estimator,
+                    args.dropout_iter,
+                    args.query,
+                    state
+                )
+                avg_hist.append(training_hist)
+                test_scores.append(test_score)
+                print_elapsed_time(start_time, e + 1, acq_func_name)
+            avg_hist = np.average(np.array(avg_hist), axis=0)
+            avg_test = sum(test_scores) / len(test_scores)
+            print(f"Average Test score for {acq_func_name}: {avg_test}")
+            results[acq_func_name] = avg_hist.tolist()
     print("--------------- Done Training! ---------------")
     plot_results(results)
 
@@ -159,6 +166,13 @@ def main():
         default=100,
         metavar="V",
         help="validation set size (default: 100)",
+    )
+    parser.add_argument(
+        "--determ",
+        type=bool,
+        default=False,
+        metavar="D",
+        help="Compare with deterministic models (default: False)",
     )
 
     args = parser.parse_args()
