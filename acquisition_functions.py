@@ -15,7 +15,7 @@ def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100, training: boo
     with torch.no_grad():
         outputs = np.stack(
             [
-                torch.log_softmax(
+                torch.softmax(
                     model.estimator.forward(X_pool[random_subset], training=training),
                     dim=-1,
                 )
