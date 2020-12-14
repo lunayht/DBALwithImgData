@@ -47,7 +47,7 @@ def print_elapsed_time(start_time: float, exp: int, acq_func: str):
     """
     elp = start_time - time.time()
     print(
-        f"********** Experiment {exp} ({acq_func}): {elp//3600:0.2d}:{elp%3600//60:0.2d}:{elp%60//1:0.2d} **********"
+        f"********** Experiment {exp} ({acq_func}): {elp//3600}:{elp%3600//60}:{elp%60//1} **********"
     )
 
 
