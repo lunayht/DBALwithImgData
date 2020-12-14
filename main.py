@@ -45,7 +45,7 @@ def print_elapsed_time(start_time: float, exp: int, acq_func: str):
         exp: Experiment iteration
         acq_func: Name of acquisition function
     """
-    elp = start_time - time.time()
+    elp = time.time() - start_time
     print(
         f"********** Experiment {exp} ({acq_func}): {elp//3600}:{elp%3600//60}:{elp%60//1} **********"
     )
