@@ -66,11 +66,11 @@ Or use ```--help``` for more info.
 
 #### Note
 - ```--determ``` is set as ```False``` by default for Experiment 1, set this to ```True``` to run Experiment 2.
-- ```--val_size``` is set as ```100``` by default for Experiment 1. To run Experiment 4, please set this to ```5000```.
+- ```--val_size``` is set as ```100``` by default for Experiment 1. To run Experiment 2 and 4, please set this to ```5000```.
 
 ## Results
 ### 1. Comparison of various acquisition functions
-<!-- ![exp_1.png](result_img/exp_1.png) -->
+![exp_1.png](result_img/exp_1.png)
 
 Number of acquired images to get model error of %: (the lower the better)
 | Techniques | 10% error (Paper: Keras) | 10% error (Experiment: Pytorch) | 5% error (Paper: Keras) | 5% error (Experiment: Pytorch) |
@@ -80,29 +80,30 @@ Number of acquired images to get model error of %: (the lower the better)
 | Var Ratios | 120 | 143 | 295 | 283 |
 | Max Entropy | 165 | 163 | 355 | 310 |
 
-#### Average running time for each experiment (2000 random subset from pool, 100 validation points)
+#### Average running time for each experiment (2000 random subset from pool, 100 validation points) on Google Colab (Tesla T4 15GB)
 - Random: ~2m 17s
-- BALD: 
-- Var Ratios: 
-- Max Entropy: ~10m 50s
+- BALD: ~10m 52s
+- Var Ratios: ~10m 58s
+- Max Entropy: ~10m 39s
 
 Best 2 models: Var Ratios, BALD
 
 ### 2. Importance of model uncertainty
-#### Max Entropy
-<!-- ![exp_2maxent.png](result_img/exp_2maxent.png) -->
-
 #### BALD
+![exp_2bald.png](result_img/exp_2bald.png)
 
 #### Var Ratios
 ![exp_2varratios.png](result_img/exp_2varratios.png)
 
+#### Max Entropy
+![exp_2maxent.png](result_img/exp_2maxent.png)
+
 ### 3. Comparison to current active learning techniques
 
 ### 4. Comparison to semi-supervised learning
-<!-- ![exp_4.png](result_img/exp_4.png) -->
+![exp_4.png](result_img/exp_4.png)
 
-Test error on MNIST with 1000 acquired images, using 5000 validation points:
+Test error on MNIST with 1000 acquired images, using **5000** validation points:
 | Technique | Test error (Paper: Keras) | Test error (Experiment: Pytorch) |
 |  :-----:  |   :----:   |   :----:   |
 | Random(Baseline) | 4.66% | 3.73% |
