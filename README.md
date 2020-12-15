@@ -68,12 +68,9 @@ Or use ```--help``` for more info.
 - ```--determ``` is set as ```False``` by default for Experiment 1, set this to ```True``` to run Experiment 2.
 - ```--val_size``` is set as ```100``` by default for Experiment 1. To run Experiment 4, please set this to ```5000```.
 
-#### Google Colab
-https://colab.research.google.com/drive/1hkQcSYt24J7wcW8hyqfYpg7gcs3cFmo3?usp=sharing
-
 ## Results
 ### 1. Comparison of various acquisition functions
-![exp_1.png](result_img/exp_1.png)
+<!-- ![exp_1.png](result_img/exp_1.png) -->
 
 Number of acquired images to get model error of %: (the lower the better)
 | Techniques | 10% error (Paper: Keras) | 10% error (Experiment: Pytorch) | 5% error (Paper: Keras) | 5% error (Experiment: Pytorch) |
@@ -92,11 +89,18 @@ Number of acquired images to get model error of %: (the lower the better)
 Best 2 models: Var Ratios, BALD
 
 ### 2. Importance of model uncertainty
+#### Max Entropy
+<!-- ![exp_2maxent.png](result_img/exp_2maxent.png) -->
+
+#### BALD
+
+#### Var Ratios
+![exp_2varratios.png](result_img/exp_2varratios.png)
 
 ### 3. Comparison to current active learning techniques
 
 ### 4. Comparison to semi-supervised learning
-![exp_4.png](result_img/exp_4.png)
+<!-- ![exp_4.png](result_img/exp_4.png) -->
 
 Test error on MNIST with 1000 acquired images, using 5000 validation points:
 | Technique | Test error (Paper: Keras) | Test error (Experiment: Pytorch) |

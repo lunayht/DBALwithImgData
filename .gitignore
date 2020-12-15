@@ -1,8 +1,16 @@
+# TeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.pdf
+*.synctex.gz
+
 # This project
 MNIST/
 
 # Vscode
 .vscode/
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
