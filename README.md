@@ -59,13 +59,12 @@ $ python3 main.py --batch_size 128 \
                   --dropout_iter 100 \
                   --query 10 \
                   --acq_func 0 \
-                  --val_size 100 \
-                  --determ False
+                  --val_size 100 
 ```
 Or use ```--help``` for more info.
 
 #### Note
-- ```--determ``` is set as ```False``` by default for Experiment 1, set this to ```True``` to run Experiment 2.
+- ```--determ``` is set as ```False``` by default for Experiment 1, add this to run Experiment 2.
 - ```--val_size``` is set as ```100``` by default for Experiment 1. To run Experiment 2 and 4, please set this to ```5000```.
 
 ## Results

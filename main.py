@@ -1,5 +1,6 @@
 import os
 import time
+import shutil
 import argparse
 import numpy as np
 import seaborn as sns
@@ -111,6 +112,7 @@ def train_active_learning(args, device, datasets: dict) -> dict:
             print(f"Average Test score for {acq_func_name}: {avg_test}")
             results[acq_func_name] = avg_hist.tolist()
     print("--------------- Done Training! ---------------")
+    return results
 
 
 def main():
@@ -177,9 +179,7 @@ def main():
     )
     parser.add_argument(
         "--determ",
-        type=bool,
-        default=False,
-        metavar="D",
+        action="store_true",
         help="Compare with deterministic models (default: False)",
     )
 
@@ -203,11 +203,11 @@ def main():
 
     SAVE_PATH = "result_npy"
     if os.path.exists(SAVE_PATH):
-        os.rmdir(SAVE_PATH)
+        shutil.rmtree(SAVE_PATH)
     os.mkdir(SAVE_PATH)
 
     results = train_active_learning(args, device, datasets)
-    plot_results(data=results, name=SAVE_PATH)
+    plot_results(data=results, folder=SAVE_PATH)
 
 
 if __name__ == "__main__":
