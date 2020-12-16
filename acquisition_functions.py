@@ -21,7 +21,7 @@ def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100, training: boo
                 )
                 .cpu()
                 .numpy()
-                for t in range(T)
+                for _ in range(T)
             ]
         )
     return outputs, random_subset
@@ -54,7 +54,7 @@ def shannon_entropy_function(
     """
     outputs, random_subset = predictions_from_pool(model, X_pool, T, training=training)
     pc = outputs.mean(axis=0)
-    H = (-pc * np.log(pc + 1e-10)).sum(axis=-1)
+    H = (-pc * np.log(pc + 1e-10)).sum(axis=-1) # To avoid division with zero, add 1e-10
     if E_H:
         E = -np.mean(np.sum(outputs * np.log(outputs + 1e-10), axis=-1), axis=0)
         return H, E, random_subset
