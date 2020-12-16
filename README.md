@@ -80,7 +80,11 @@ Number of acquired images to get model error of %: (the lower the better)
 | Var Ratios | 120 | 143 | 295 | 283 |
 | Max Entropy | 165 | 163 | 355 | 310 |
 
-#### Average running time for each experiment (2000 random subset from pool, 100 validation points) on Google Colab (Tesla T4 15GB)
+#### Average running time for each experiment (100 validation points) on Google Colab (Tesla T4 15GB)
+To further reduce computational time, 2000 random points subset will be used instead of whole pool. These datapoints are selected randomly from pool data points using
+```python
+np.random.choice(range(len(X_pool)), size=2000, replace=False)
+``` 
 - Random: ~2m 17s
 - BALD: ~10m 52s
 - Var Ratios: ~10m 58s

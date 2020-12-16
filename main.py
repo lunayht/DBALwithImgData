@@ -1,10 +1,12 @@
 import time
 import argparse
 import numpy as np
+import seaborn as sns
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 from skorch import NeuralNetClassifier
+from scipy.ndimage.filters import gaussian_filter1d
 
 from load_data import LoadData
 from cnn_model import ConvNN
@@ -31,7 +33,9 @@ def load_CNN_model(args, device):
 
 def plot_results(data: dict):
     """Plot results histogram using matplotlib"""
+    sns.set()
     for key in data.keys():
+        # data[key] = gaussian_filter1d(data[key], sigma=0.9) # for smoother graph
         plt.plot(data[key], label=key)
         print(data[key])
     plt.show()
