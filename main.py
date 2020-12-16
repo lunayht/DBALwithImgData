@@ -81,7 +81,7 @@ def train_active_learning(args, device, datasets: dict) -> dict:
         for i, acq_func in enumerate(acq_functions):
             avg_hist = []
             test_scores = []
-            acq_func_name = str(acq_func).split(" ")[1] + ",MC_dropout=" + str(state)
+            acq_func_name = str(acq_func).split(" ")[1] + "-MC_dropout=" + str(state)
             print(f"\n---------- Start {acq_func_name} training! ----------")
             for e in range(args.experiments):
                 start_time = time.time()
