@@ -45,7 +45,7 @@ class LoadData:
     def download_dataset(self):
         """Load MNIST dataset for training and test set."""
         transform = transforms.Compose(
-            [transforms.ToTensor(), transforms.Normalize(0.5, 0.5)]
+            [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         )
         download = self.check_MNIST_folder()
         mnist_train = MNIST(".", train=True, download=download, transform=transform)
