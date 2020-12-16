@@ -1,3 +1,4 @@
+import os
 import time
 import argparse
 import numpy as np
@@ -30,14 +31,18 @@ def load_CNN_model(args, device):
     )
     return cnn_classifier
 
+def save_as_npy(data: np.ndarray, folder: str, name: str):
+    """Save result as npy file"""
+    file_name = os.path.join(folder, name+".npy")
+    np.save(file_name, data)
 
-def plot_results(data: dict):
+def plot_results(data: dict, folder: str):
     """Plot results histogram using matplotlib"""
     sns.set()
     for key in data.keys():
         # data[key] = gaussian_filter1d(data[key], sigma=0.9) # for smoother graph
         plt.plot(data[key], label=key)
-        print(data[key])
+        save_as_npy(data=np.array(data[key]), folder=folder, name=key)
     plt.show()
 
 
@@ -75,7 +80,7 @@ def train_active_learning(args, device, datasets: dict) -> dict:
         for i, acq_func in enumerate(acq_functions):
             avg_hist = []
             test_scores = []
-            acq_func_name = str(acq_func).split(" ")[1] + ", MC_dropout=" + str(state)
+            acq_func_name = str(acq_func).split(" ")[1] + ",MC_dropout=" + str(state)
             print(f"\n---------- Start {acq_func_name} training! ----------")
             for e in range(args.experiments):
                 start_time = time.time()
@@ -106,7 +111,6 @@ def train_active_learning(args, device, datasets: dict) -> dict:
             print(f"Average Test score for {acq_func_name}: {avg_test}")
             results[acq_func_name] = avg_hist.tolist()
     print("--------------- Done Training! ---------------")
-    plot_results(results)
 
 
 def main():
@@ -197,7 +201,13 @@ def main():
         datasets["y_test"],
     ) = DataLoader.load_all()
 
+    SAVE_PATH = "result_npy"
+    if os.path.exists(SAVE_PATH):
+        os.rmdir(SAVE_PATH)
+    os.mkdir(SAVE_PATH)
+
     results = train_active_learning(args, device, datasets)
+    plot_results(data=results, name=SAVE_PATH)
 
 
 if __name__ == "__main__":

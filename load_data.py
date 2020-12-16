@@ -37,8 +37,8 @@ class LoadData:
         return np_data
 
     def check_MNIST_folder(self) -> bool:
-        """Check whether MNIST folder exists, if yes remove and redownload."""
-        if os.path.isfile("MNIST/"):
+        """Check whether MNIST folder exists, skip download if existed"""
+        if os.path.exists("MNIST/"):
             return False
         return True
 
