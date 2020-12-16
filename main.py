@@ -84,19 +84,19 @@ def train_active_learning(args, device, datasets: dict) -> dict:
                     f"********** Experiment Iterations: {e+1}/{args.experiments} **********"
                 )
                 training_hist, test_score = active_learning_procedure(
-                    acq_func,
-                    datasets["X_val"],
-                    datasets["y_val"],
-                    datasets["X_test"],
-                    datasets["y_test"],
-                    datasets["X_pool"],
-                    datasets["y_pool"],
-                    datasets["X_init"],
-                    datasets["y_init"],
-                    estimator,
-                    args.dropout_iter,
-                    args.query,
-                    state
+                    query_strategy=acq_func,
+                    X_val=datasets["X_val"],
+                    y_val=datasets["y_val"],
+                    X_test=datasets["X_test"],
+                    y_test=datasets["y_test"],
+                    X_pool=datasets["X_pool"],
+                    y_pool=datasets["y_pool"],
+                    X_init=datasets["X_init"],
+                    y_init=datasets["y_init"],
+                    estimator=estimator,
+                    T=args.dropout_iter,
+                    n_query=args.query,
+                    training=state
                 )
                 avg_hist.append(training_hist)
                 test_scores.append(test_score)
