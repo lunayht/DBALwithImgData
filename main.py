@@ -32,12 +32,18 @@ def load_CNN_model(args, device):
     return cnn_classifier
 
 def save_as_npy(data: np.ndarray, folder: str = "result_npy", name: str):
-    """Save result as npy file"""
+    """Save result as npy file
+    
+    Attributes:
+        data: np array to be saved as npy file,
+        folder: result folder name,
+        name: npy filename
+    """
     file_name = os.path.join(folder, name+".npy")
     np.save(file_name, data)
     print(f"Saved: {file_name}")
 
-def plot_results(data: dict, folder: str):
+def plot_results(data: dict):
     """Plot results histogram using matplotlib"""
     sns.set()
     for key in data.keys():
@@ -110,7 +116,7 @@ def train_active_learning(args, device, datasets: dict) -> dict:
             avg_test = sum(test_scores) / len(test_scores)
             print(f"Average Test score for {acq_func_name}: {avg_test}")
             results[acq_func_name] = avg_hist
-            save_as_npy(data=avg_hist, name=acq_func_name)
+            save_as_npy(data=avg_hist, folder=args.result_dir ,name=acq_func_name)
     print("--------------- Done Training! ---------------")
     return results
 
@@ -156,6 +162,13 @@ def main():
         help="dropout iterations,T (default: 100)",
     )
     parser.add_argument(
+        "--acq_iter",
+        type=int,
+        default=98,
+        metavar="AI",
+        help="acquisition iterations,AI (default: 98)",
+    )
+    parser.add_argument(
         "--query",
         type=int,
         default=10,
@@ -182,6 +195,13 @@ def main():
         action="store_true",
         help="Compare with deterministic models (default: False)",
     )
+    parser.add_argument(
+        "--result_dir",
+        type=str,
+        default="result_npy",
+        metavar="SD",
+        help="save_dir (default: result_npy/)",
+    )
 
     args = parser.parse_args()
     torch.manual_seed(args.seed)
@@ -201,12 +221,11 @@ def main():
         datasets["y_test"],
     ) = DataLoader.load_all()
 
-    SAVE_PATH = "result_npy"
-    if not os.path.exists(SAVE_PATH):
-        os.mkdir(SAVE_PATH)
+    if not os.path.exists(args.result_dir):
+        os.mkdir(args.result_dir)
 
     results = train_active_learning(args, device, datasets)
-    plot_results(data=results, folder=SAVE_PATH)
+    plot_results(data=results)
 
 
 if __name__ == "__main__":
