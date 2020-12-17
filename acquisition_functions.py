@@ -27,7 +27,7 @@ def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100, training: boo
     return outputs, random_subset
 
 
-def uniform(model, X_pool: np.ndarray, n_query: int = 10, training: bool = True):
+def uniform(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True):
     """Baseline acquisition a(x) = unif() with unif() a function
     returning a draw from a uniform distribution over the interval [0,1].
     Using this acquisition function is equivalent to choosing a point

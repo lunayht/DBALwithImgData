@@ -6,7 +6,7 @@ In this paper, Gal _et al._ combine recent advances in Bayesian deep learning in
 
 By taking advantage of specialised models such as Bayesian convolutional neural network, the proposed technique obtains a significant improvement on existing active learning approaches.
 ### Methodology
-Compare various acquisition functions: Bayesian Active Learning by Disagreement (BALD, _[Houlsby et al., 2011](https://arxiv.org/pdf/1112.5745.pdf)_),Variation Ratios (_[Freeman, 1965](https://academic.oup.com/sf/article-abstract/44/3/455/2228590?redirectedFrom=fulltext)_), Max Entropy (_[Shannon, 1948](http://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)_) and baseline Random relying on Bayesian CNN uncertainty with simple image classification benchmark. All acquisition functions are assessed with _same_ model structure:
+Compare various acquisition functions: Bayesian Active Learning by Disagreement (BALD, _[Houlsby et al., 2011](https://arxiv.org/pdf/1112.5745.pdf)_),Variation Ratios (_[Freeman, 1965](https://academic.oup.com/sf/article-abstract/44/3/455/2228590?redirectedFrom=fulltext)_), Max Entropy (_[Shannon, 1948](http://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)_), Mean STD (_[Kampffmeyer et al., 2016](https://www.researchgate.net/profile/Michael_Kampffmeyer/publication/309787025_Semantic_Segmentation_of_Small_Objects_and_Modeling_of_Uncertainty_in_Urban_Remote_Sensing_Images_Using_Deep_Convolutional_Neural_Networks/links/5a049d170f7e9bc4078dc616/Semantic-Segmentation-of-Small-Objects-and-Modeling-of-Uncertainty-in-Urban-Remote-Sensing-Images-Using-Deep-Convolutional-Neural-Networks.pdf);[Kendall et al., 2015](https://arxiv.org/pdf/1511.02680.pdf)_) and baseline Random relying on Bayesian CNN uncertainty with simple image classification benchmark. All acquisition functions are assessed with _same_ model structure:
 
 > Convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax
 
@@ -75,6 +75,7 @@ Number of acquired images to get model error of %: (the lower the better)
 | Techniques | 10% error (Paper: Keras) | 10% error (Experiment: Pytorch) | 5% error (Paper: Keras) | 5% error (Experiment: Pytorch) |
 |  :------:  |   :------:   |   :------:   |   :------:   |   :------:   |
 | Random (Baseline) | 255 | 250 | 835 | 517 |
+| Mean STD | 230 |  | 695 |  |
 | BALD | 145 | 150 | 335 | 296 |
 | Var Ratios | 120 | 143 | 295 | 283 |
 | Max Entropy | 165 | 163 | 355 | 310 |
@@ -88,6 +89,7 @@ np.random.choice(range(len(X_pool)), size=2000, replace=False)
 - BALD: ~10m 52s
 - Var Ratios: ~10m 58s
 - Max Entropy: ~10m 39s
+- Mean STD: 
 
 Best 2 models: Var Ratios, BALD
 
@@ -110,6 +112,7 @@ Test error on MNIST with 1000 acquired images, using **5000** validation points:
 | Technique | Test error (Paper: Keras) | Test error (Experiment: Pytorch) |
 |  :-----:  |   :----:   |   :----:   |
 | Random(Baseline) | 4.66% | 3.73% |
+| Mean STD | - |  |
 | BALD | 1.80% | 1.81% |
 | Max Entropy | 1.74% | 1.66% |
 | Var Ratios | 1.64% | 1.57% |
