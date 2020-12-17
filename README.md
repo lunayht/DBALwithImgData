@@ -75,7 +75,7 @@ Number of acquired images to get model error of %: (the lower the better)
 | Techniques | 10% error (Paper: Keras) | 10% error (Experiment: Pytorch) | 5% error (Paper: Keras) | 5% error (Experiment: Pytorch) |
 |  :------:  |   :------:   |   :------:   |   :------:   |   :------:   |
 | Random (Baseline) | 255 | 250 | 835 | 517 |
-| Mean STD | 230 |  | 695 |  |
+| Mean STD | 230 | 100 | 695 | 295 |
 | BALD | 145 | 150 | 335 | 296 |
 | Var Ratios | 120 | 143 | 295 | 283 |
 | Max Entropy | 165 | 163 | 355 | 310 |
@@ -89,7 +89,7 @@ np.random.choice(range(len(X_pool)), size=2000, replace=False)
 - BALD: ~10m 52s
 - Var Ratios: ~10m 58s
 - Max Entropy: ~10m 39s
-- Mean STD: 
+- Mean STD: ~10m 40s
 
 Best 2 models: Var Ratios, BALD
 
@@ -112,7 +112,7 @@ Test error on MNIST with 1000 acquired images, using **5000** validation points:
 | Technique | Test error (Paper: Keras) | Test error (Experiment: Pytorch) |
 |  :-----:  |   :----:   |   :----:   |
 | Random(Baseline) | 4.66% | 3.73% |
-| Mean STD | - |  |
+| Mean STD | - | 1.81% |
 | BALD | 1.80% | 1.81% |
 | Max Entropy | 1.74% | 1.66% |
 | Var Ratios | 1.64% | 1.57% |

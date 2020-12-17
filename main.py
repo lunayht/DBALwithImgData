@@ -1,6 +1,5 @@
 import os
 import time
-import shutil
 import argparse
 import numpy as np
 import seaborn as sns
@@ -202,9 +201,8 @@ def main():
     ) = DataLoader.load_all()
 
     SAVE_PATH = "result_npy"
-    if os.path.exists(SAVE_PATH):
-        shutil.rmtree(SAVE_PATH)
-    os.mkdir(SAVE_PATH)
+    if not os.path.exists(SAVE_PATH):
+        os.mkdir(SAVE_PATH)
 
     results = train_active_learning(args, device, datasets)
     plot_results(data=results, folder=SAVE_PATH)
