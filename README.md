@@ -91,7 +91,7 @@ np.random.choice(range(len(X_pool)), size=2000, replace=False)
 - Max Entropy: ~10m 39s
 - Mean STD: ~10m 40s
 
-Best 2 models: Var Ratios, BALD
+Best 2 models: Mean STD, Var Ratios
 
 ### 2. Importance of model uncertainty
 #### BALD
