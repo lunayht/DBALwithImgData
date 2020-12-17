@@ -69,6 +69,6 @@ def select_acq_function(acq_func: int = 0) -> list:
         2: [max_entropy],
         3: [bald],
         4: [var_ratios],
-        5: [mean_std]
+        5: [mean_std],
     }
     return acq_func_dict[acq_func]

@@ -162,13 +162,6 @@ def main():
         help="dropout iterations,T (default: 100)",
     )
     parser.add_argument(
-        "--acq_iter",
-        type=int,
-        default=98,
-        metavar="AI",
-        help="acquisition iterations,AI (default: 98)",
-    )
-    parser.add_argument(
         "--query",
         type=int,
         default=10,

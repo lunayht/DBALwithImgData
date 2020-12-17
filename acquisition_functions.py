@@ -3,7 +3,9 @@ import numpy as np
 from scipy import stats
 
 
-def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100, training: bool = True):
+def predictions_from_pool(
+    model, X_pool: np.ndarray, T: int = 100, training: bool = True
+):
     """Run random_subset prediction on model and return the output
 
     Attributes:
@@ -23,11 +25,13 @@ def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100, training: boo
                 .numpy()
                 for _ in range(T)
             ]
-        ) 
+        )
     return outputs, random_subset
 
 
-def uniform(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True):
+def uniform(
+    model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True
+):
     """Baseline acquisition a(x) = unif() with unif() a function
     returning a draw from a uniform distribution over the interval [0,1].
     Using this acquisition function is equivalent to choosing a point
@@ -56,14 +60,18 @@ def shannon_entropy_function(
     """
     outputs, random_subset = predictions_from_pool(model, X_pool, T, training=training)
     pc = outputs.mean(axis=0)
-    H = (-pc * np.log(pc + 1e-10)).sum(axis=-1) # To avoid division with zero, add 1e-10
+    H = (-pc * np.log(pc + 1e-10)).sum(
+        axis=-1
+    )  # To avoid division with zero, add 1e-10
     if E_H:
         E = -np.mean(np.sum(outputs * np.log(outputs + 1e-10), axis=-1), axis=0)
         return H, E, random_subset
     return H, random_subset
 
 
-def max_entropy(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True):
+def max_entropy(
+    model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True
+):
     """Choose pool points that maximise the predictive entropy.
     Using Shannon entropy function.
 
@@ -74,13 +82,17 @@ def max_entropy(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, trai
         T: Number of MC dropout iterations aka training iterations,
         training: If False, run test without MC dropout. (default=True)
     """
-    acquisition, random_subset = shannon_entropy_function(model, X_pool, T, training=training)
+    acquisition, random_subset = shannon_entropy_function(
+        model, X_pool, T, training=training
+    )
     idx = (-acquisition).argsort()[:n_query]
     query_idx = random_subset[idx]
     return query_idx, X_pool[query_idx]
 
 
-def bald(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True):
+def bald(
+    model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True
+):
     """Choose pool points that are expected to maximise the information
     gained about the model parameters, i.e. maximise the mutal information
     between predictions and model posterior. Given
@@ -98,14 +110,18 @@ def bald(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: b
         T: Number of MC dropout iterations aka training iterations,
         training: If False, run test without MC dropout. (default=True)
     """
-    H, E_H, random_subset = shannon_entropy_function(model, X_pool, T, E_H=True, training=training)
+    H, E_H, random_subset = shannon_entropy_function(
+        model, X_pool, T, E_H=True, training=training
+    )
     acquisition = H - E_H
     idx = (-acquisition).argsort()[:n_query]
     query_idx = random_subset[idx]
     return query_idx, X_pool[query_idx]
 
 
-def var_ratios(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True):
+def var_ratios(
+    model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True
+):
     """Like Max Entropy but Variational Ratios measures lack of confidence.
     Given: variational_ratio[x] := 1 - max_{y} p(y|x,D_{train})
 
@@ -124,10 +140,13 @@ def var_ratios(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, train
     query_idx = random_subset[idx]
     return query_idx, X_pool[query_idx]
 
-def mean_std(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True):
+
+def mean_std(
+    model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True
+):
     """Maximise mean standard deviation
     Given: sigma_c = sqrt(E_{q(w)}[p(y=c|x,w)^2]-E_{q(w)}[p(y=c|x,w)]^2)
-    
+
     Attributes:
         model: Model that is ready to measure uncertainty after training,
         X_pool: Pool set to select uncertainty,

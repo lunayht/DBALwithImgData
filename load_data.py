@@ -61,7 +61,9 @@ class LoadData:
             dataset=train_set, batch_size=self.train_size, shuffle=True
         )
         val_loader = DataLoader(dataset=val_set, batch_size=self.val_size, shuffle=True)
-        pool_loader = DataLoader(dataset=pool_set, batch_size=self.pool_size, shuffle=True)
+        pool_loader = DataLoader(
+            dataset=pool_set, batch_size=self.pool_size, shuffle=True
+        )
         test_loader = DataLoader(
             dataset=self.mnist_test, batch_size=10000, shuffle=True
         )

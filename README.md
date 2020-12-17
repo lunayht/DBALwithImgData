@@ -57,7 +57,6 @@ $ python3 main.py --batch_size 128 \
                   --seed 369 \
                   --experiments 3 \
                   --dropout_iter 100 \
-                  --acq_iter 98 \
                   --query 10 \
                   --acq_func 0 \
                   --val_size 100 \
@@ -68,6 +67,7 @@ Or use ```--help``` for more info.
 #### Note
 - ```--determ``` is set as ```False``` by default for Experiment 1, add this to run Experiment 2.
 - ```--val_size``` is set as ```100``` by default for Experiment 1. To run Experiment 4, please set this to ```5000```.
+- In this implementation, ```acqusition_iterations = dropout_iterations = 100```
 
 ## Results
 ### 1. Comparison of various acquisition functions
