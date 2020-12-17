@@ -200,7 +200,7 @@ def main():
         type=str,
         default="result_npy",
         metavar="SD",
-        help="save_dir (default: result_npy/)",
+        help="Save npy file in this folder (default: result_npy)",
     )
 
     args = parser.parse_args()
