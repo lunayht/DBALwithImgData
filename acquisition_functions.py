@@ -136,7 +136,7 @@ def mean_std(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, trainin
         training: If False, run test without MC dropout. (default=True)
     """
     outputs, random_subset = predictions_from_pool(model, X_pool, T, training)
-    sigma_c = np.sqrt((outputs**2).mean(axis=0) - (outputs.mean(axis=0)**2))
+    sigma_c = np.std(outputs, axis=0)
     acquisition = np.mean(sigma_c, axis=-1)
     idx = (-acquisition).argsort()[:n_query]
     query_idx = random_subset[idx]
