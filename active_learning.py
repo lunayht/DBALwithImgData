@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from modAL.models import ActiveLearner
 
-from acquisition_functions import uniform, max_entropy, bald, var_ratios
+from acquisition_functions import uniform, max_entropy, bald, var_ratios, mean_std
 
 
 def active_learning_procedure(
@@ -61,13 +61,14 @@ def select_acq_function(acq_func: int = 0) -> list:
 
     Attributes:
         acq_func: 0-all(unif, max_entropy, bald), 1-unif, 2-maxentropy, 3-bald, \
-                  4-var_ratios
+                  4-var_ratios, 5-mean_std
     """
     acq_func_dict = {
-        0: [uniform, max_entropy, bald, var_ratios],
+        0: [uniform, max_entropy, bald, var_ratios, mean_std],
         1: [uniform],
         2: [max_entropy],
         3: [bald],
         4: [var_ratios],
+        5: [mean_std]
     }
     return acq_func_dict[acq_func]

@@ -23,7 +23,7 @@ def predictions_from_pool(model, X_pool: np.ndarray, T: int = 100, training: boo
                 .numpy()
                 for _ in range(T)
             ]
-        )
+        ) 
     return outputs, random_subset
 
 
@@ -35,7 +35,8 @@ def uniform(model, X_pool: np.ndarray, n_query: int = 10, training: bool = True)
 
     Attributes:
         X_pool: Pool set to select uncertainty,
-        n_query: Number of points that randomly select from pool set
+        n_query: Number of points that randomly select from pool set,
+        training: If False, run test without MC dropout. (default=True)
     """
     query_idx = np.random.choice(range(len(X_pool)), size=n_query, replace=False)
     return query_idx, X_pool[query_idx]
@@ -50,7 +51,8 @@ def shannon_entropy_function(
         model: Model that is ready to measure uncertainty after training,
         X_pool: Pool set to select uncertainty,
         T: Number of MC dropout iterations aka training iterations,
-        E_H: If True, compute H and EH for BALD (default: False)
+        E_H: If True, compute H and EH for BALD (default: False),
+        training: If False, run test without MC dropout. (default=True)
     """
     outputs, random_subset = predictions_from_pool(model, X_pool, T, training=training)
     pc = outputs.mean(axis=0)
@@ -69,7 +71,8 @@ def max_entropy(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, trai
         model: Model that is ready to measure uncertainty after training,
         X_pool: Pool set to select uncertainty,
         n_query: Number of points that maximise max_entropy a(x) from pool set,
-        T: Number of MC dropout iterations aka training iterations
+        T: Number of MC dropout iterations aka training iterations,
+        training: If False, run test without MC dropout. (default=True)
     """
     acquisition, random_subset = shannon_entropy_function(model, X_pool, T, training=training)
     idx = (-acquisition).argsort()[:n_query]
@@ -92,7 +95,8 @@ def bald(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: b
         model: Model that is ready to measure uncertainty after training,
         X_pool: Pool set to select uncertainty,
         n_query: Number of points that maximise bald a(x) from pool set,
-        T: Number of MC dropout iterations aka training iterations
+        T: Number of MC dropout iterations aka training iterations,
+        training: If False, run test without MC dropout. (default=True)
     """
     H, E_H, random_subset = shannon_entropy_function(model, X_pool, T, E_H=True, training=training)
     acquisition = H - E_H
@@ -109,12 +113,31 @@ def var_ratios(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, train
         model: Model that is ready to measure uncertainty after training,
         X_pool: Pool set to select uncertainty,
         n_query: Number of points that maximise var_ratios a(x) from pool set,
-        T: Number of MC dropout iterations aka training iterations
+        T: Number of MC dropout iterations aka training iterations,
+        training: If False, run test without MC dropout. (default=True)
     """
     outputs, random_subset = predictions_from_pool(model, X_pool, T, training)
     preds = np.argmax(outputs, axis=2)
     _, count = stats.mode(preds, axis=0)
     acquisition = (1 - count / preds.shape[1]).reshape((-1,))
+    idx = (-acquisition).argsort()[:n_query]
+    query_idx = random_subset[idx]
+    return query_idx, X_pool[query_idx]
+
+def mean_std(model, X_pool: np.ndarray, n_query: int = 10, T: int = 100, training: bool = True):
+    """Maximise mean standard deviation
+    Given: sigma_c = sqrt(E_{q(w)}[p(y=c|x,w)^2]-E_{q(w)}[p(y=c|x,w)]^2)
+    
+    Attributes:
+        model: Model that is ready to measure uncertainty after training,
+        X_pool: Pool set to select uncertainty,
+        n_query: Number of points that maximise mean std a(x) from pool set,
+        T: Number of MC dropout iterations aka training iterations,
+        training: If False, run test without MC dropout. (default=True)
+    """
+    outputs, random_subset = predictions_from_pool(model, X_pool, T, training)
+    sigma_c = np.sqrt(np.mean(outputs**2, axis=0) - (np.mean(outputs, axis=0))**2)
+    acquisition = np.mean(sigma_c, axis=-1)
     idx = (-acquisition).argsort()[:n_query]
     query_idx = random_subset[idx]
     return query_idx, X_pool[query_idx]

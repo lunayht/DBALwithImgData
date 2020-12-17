@@ -168,7 +168,7 @@ def main():
         default=0,
         metavar="AF",
         help="acqusition functions: 0-all, 1-uniform, 2-max_entropy, \
-                            3-bald, 4-var_ratios (default: 0)",
+                            3-bald, 4-var_ratios, 5-mean_std (default: 0)",
     )
     parser.add_argument(
         "--val_size",
