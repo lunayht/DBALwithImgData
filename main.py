@@ -31,10 +31,11 @@ def load_CNN_model(args, device):
     )
     return cnn_classifier
 
-def save_as_npy(data: np.ndarray, folder: str, name: str):
+def save_as_npy(data: np.ndarray, folder: str = "result_npy", name: str):
     """Save result as npy file"""
     file_name = os.path.join(folder, name+".npy")
     np.save(file_name, data)
+    print(f"Saved: {file_name}")
 
 def plot_results(data: dict, folder: str):
     """Plot results histogram using matplotlib"""
@@ -42,7 +43,6 @@ def plot_results(data: dict, folder: str):
     for key in data.keys():
         # data[key] = gaussian_filter1d(data[key], sigma=0.9) # for smoother graph
         plt.plot(data[key], label=key)
-        save_as_npy(data=np.array(data[key]), folder=folder, name=key)
     plt.show()
 
 
@@ -110,6 +110,7 @@ def train_active_learning(args, device, datasets: dict) -> dict:
             avg_test = sum(test_scores) / len(test_scores)
             print(f"Average Test score for {acq_func_name}: {avg_test}")
             results[acq_func_name] = avg_hist
+            save_as_npy(data=avg_hist, name=acq_func_name)
     print("--------------- Done Training! ---------------")
     return results
 
