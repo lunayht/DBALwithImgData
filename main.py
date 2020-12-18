@@ -31,7 +31,7 @@ def load_CNN_model(args, device):
     )
     return cnn_classifier
 
-def save_as_npy(data: np.ndarray, folder: str = "result_npy", name: str):
+def save_as_npy(data: np.ndarray, folder: str, name: str):
     """Save result as npy file
     
     Attributes:
