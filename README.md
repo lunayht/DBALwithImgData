@@ -68,6 +68,7 @@ Or use ```--help``` for more info.
 - ```--determ``` is set as ```False``` by default for Experiment 1, add this to run Experiment 2.
 - ```--val_size``` is set as ```100``` by default for Experiment 1. To run Experiment 4, please set this to ```5000```.
 - In this implementation, ```acqusition_iterations = dropout_iterations = 100```
+- For Experiment 3, please refer to ```comparison_to_MBR.ipynb``` or Google Colab link [here](https://colab.research.google.com/drive/1NUgaFo2liAhfBNFZHyyJ1B5L1Wk2bnNr?usp=sharing).
 
 ## Results
 ### 1. Comparison of various acquisition functions
@@ -106,6 +107,8 @@ Best 2 models: Mean STD, Var Ratios
 ![exp_2maxent.png](result_img/exp_2maxent.png)
 
 ### 3. Comparison to current active learning techniques
+Binary Classification (MNIST two digit classification)
+![exp_3.png](result_img/exp_3.png)
 
 ### 4. Comparison to semi-supervised learning
 ![exp_4.png](result_img/exp_4.png)
