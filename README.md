@@ -107,8 +107,10 @@ Best 2 models: Mean STD, Var Ratios
 ![exp_2maxent.png](result_img/exp_2maxent.png)
 
 ### 3. Comparison to current active learning techniques
-Binary Classification (MNIST two digit classification)
 ![exp_3.png](result_img/exp_3.png)
+
+### Note: 
+This experiment is run on Binary Classification test. (MNIST two digit classification)
 
 ### 4. Comparison to semi-supervised learning
 ![exp_4.png](result_img/exp_4.png)
