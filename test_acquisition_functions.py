@@ -3,6 +3,7 @@ import numpy as np
 
 from acquisition_functions import uniform, max_entropy, bald, var_ratios
 
+
 class TestAcqFunc:
     def test_uniform_select_2(self):
         x = torch.rand((100, 1, 28, 28))

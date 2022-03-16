@@ -31,17 +31,19 @@ def load_CNN_model(args, device):
     )
     return cnn_classifier
 
+
 def save_as_npy(data: np.ndarray, folder: str, name: str):
     """Save result as npy file
-    
+
     Attributes:
         data: np array to be saved as npy file,
         folder: result folder name,
         name: npy filename
     """
-    file_name = os.path.join(folder, name+".npy")
+    file_name = os.path.join(folder, name + ".npy")
     np.save(file_name, data)
     print(f"Saved: {file_name}")
+
 
 def plot_results(data: dict):
     """Plot results histogram using matplotlib"""
@@ -78,10 +80,10 @@ def train_active_learning(args, device, datasets: dict) -> dict:
     acq_functions = select_acq_function(args.acq_func)
     results = dict()
     if args.determ:
-        state_loop = [True, False] # dropout VS non-dropout
+        state_loop = [True, False]  # dropout VS non-dropout
     else:
-        state_loop = [True] # run dropout only
-    
+        state_loop = [True]  # run dropout only
+
     for state in state_loop:
         for i, acq_func in enumerate(acq_functions):
             avg_hist = []
@@ -107,7 +109,7 @@ def train_active_learning(args, device, datasets: dict) -> dict:
                     estimator=estimator,
                     T=args.dropout_iter,
                     n_query=args.query,
-                    training=state
+                    training=state,
                 )
                 avg_hist.append(training_hist)
                 test_scores.append(test_score)
@@ -116,7 +118,7 @@ def train_active_learning(args, device, datasets: dict) -> dict:
             avg_test = sum(test_scores) / len(test_scores)
             print(f"Average Test score for {acq_func_name}: {avg_test}")
             results[acq_func_name] = avg_hist
-            save_as_npy(data=avg_hist, folder=args.result_dir ,name=acq_func_name)
+            save_as_npy(data=avg_hist, folder=args.result_dir, name=acq_func_name)
     print("--------------- Done Training! ---------------")
     return results
 
