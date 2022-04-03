@@ -2,7 +2,7 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/lunayht/dbalwithimgdata/badge)](https://www.codefactor.io/repository/github/lunayht/dbalwithimgdata) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) 
 
-Implementation of "[Deep Bayesian Active Learning with Image Data](https://arxiv.org/pdf/1703.02910.pdf)" by Yarin Gal, Riashat Islam, Zoubin Ghahramani (ICML 2017) using Pytorch.
+Unofficial implementation of "[Deep Bayesian Active Learning with Image Data](https://arxiv.org/pdf/1703.02910.pdf)" by Yarin Gal, Riashat Islam, Zoubin Ghahramani (ICML 2017) using Pytorch.
 
 ## About The Paper
 In this paper, Gal _et al._ combine recent advances in Bayesian deep learning into the active learning framework in a practical way -- an active learning framework for high dimensional data, a task which has been extremely challenging so far. 
